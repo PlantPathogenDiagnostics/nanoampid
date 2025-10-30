@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::multiqc=1.31
+  - bioconda::porechop_abi=0.5.0post1
