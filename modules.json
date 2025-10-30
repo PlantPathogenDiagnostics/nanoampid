@@ -5,7 +5,17 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
-                    "fastqc": {
+                    "bbmap/bbduk": {
+                        "branch": "master",
+                        "git_sha": "3351c212144fc8aab0e595165bf447ebecfebd8a",
+                        "installed_by": ["modules"]
+                    },
+                    "chopper": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    },
+                    "filtlong": {
                         "branch": "master",
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
@@ -18,6 +28,21 @@
                     "nanoplot": {
                         "branch": "master",
                         "git_sha": "9322f997f94451510f974e417ec5277869030b44",
+                        "installed_by": ["modules"]
+                    },
+                    "nanoq": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
+                        "installed_by": ["modules"]
+                    },
+                    "porechop/abi": {
+                        "branch": "master",
+                        "git_sha": "10d3ce839d4c87bbff4da434e155a3c8a112ea05",
+                        "installed_by": ["modules"]
+                    },
+                    "porechop/porechop": {
+                        "branch": "master",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     }
                 }

@@ -5,6 +5,47 @@
     "description": "Bioinformatic pipeline for taxonomic assignment of amplicon seqeuncing from Nanopore reads",
     "type": "object",
     "$defs": {
+        "reference_database": {
+            "title": "Reference Database",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "reference": {
+                    "type": "string",
+                    "description": "Path to fasta file of references"
+                }
+            },
+            "required": ["reference"]
+        },
+        "read_qc_options": {
+            "title": "Read QC options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "min_length": {
+                    "type": "number",
+                    "description": "Minimum read length used for building consensus sequences.",
+                    "default": 500
+                },
+                "min_quality": {
+                    "type": "number",
+                    "description": "Minimum read quality used for building consensus sequences.",
+                    "default": 10
+                },
+                "adaptertrimming_tool": {
+                    "type": "string",
+                    "default": "porechop",
+                    "enum": ["porechop", "porechop_abi"]
+                },
+                "max_length": {
+                    "type": "number",
+                    "description": "Maximum read length used for building consensus sequences.",
+                    "default": 1000
+                }
+            }
+        },
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -220,6 +261,12 @@
     },
     "allOf": [
         {
+            "$ref": "#/$defs/reference_database"
+        },
+        {
+            "$ref": "#/$defs/read_qc_options"
+        },
+        {
             "$ref": "#/$defs/input_output_options"
         },
         {
@@ -234,6 +281,9 @@
     ],
     "properties": {
         "skip_qc": {
+            "type": "boolean"
+        },
+        "show_hidden": {
             "type": "boolean"
         }
     }

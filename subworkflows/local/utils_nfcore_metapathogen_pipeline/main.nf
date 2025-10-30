@@ -157,6 +157,10 @@ def validateInputParameters() {
     genomeExistsError()
 }
 
+def createFileChannel(param) {
+    return param ? Channel.fromPath(param, checkIfExists: true).collect() : []
+}
+
 //
 // Validate channels from input samplesheet
 //

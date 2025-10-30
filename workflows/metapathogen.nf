@@ -3,12 +3,20 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
 include { MULTIQC                 } from '../modules/nf-core/multiqc/main'
-include { NANOPLOT               } from '../modules/nf-core/nanoplot/main'
 include { paramsSummaryMap        } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc    } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML  } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText  } from '../subworkflows/local/utils_nfcore_metapathogen_pipeline'
+
+include { createFileChannel               } from '../subworkflows/local/utils_nfcore_metapathogen_pipeline'
+
+//
+// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
+//
+include { LONGREAD_PREPROCESSING  }       from '../subworkflows/local/longread_preprocessing/main'
+include { REFERENCE_BASED_CLUSTERING }    from '../subworkflows/local/reference_based_clustering/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,22 +28,30 @@ workflow METAPATHOGEN {
 
     take:
     ch_samplesheet // channel: samplesheet read in from --input
+
+
     main:
 
-    ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
-    //
-    // MODULE: Run Nanoplot
-    //
-    if (!params.skip_qc) {
-    
-        NANOPLOT (
-            ch_samplesheet
-        )
-        ch_multiqc_files = ch_multiqc_files.mix(NANOPLOT.out.txt.collect{it[1]})
-        ch_versions = ch_versions.mix(NANOPLOT.out.versions.first())
+    ch_versions      = channel.empty()
+    ch_multiqc_files = channel.empty()
+    ch_long_reads    = channel.empty()
 
-    }
+    ch_reference = createFileChannel(params.reference)
+
+
+    LONGREAD_PREPROCESSING(
+        ch_samplesheet
+    )
+    ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(LONGREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
+    ch_long_reads = ch_long_reads.mix(LONGREAD_PREPROCESSING.out.long_reads)
+
+    REFERENCE_BASED_CLUSTERING(
+        ch_long_reads,
+        ch_reference
+    )
+
+    ch_versions = ch_versions.mix(REFERENCE_BASED_CLUSTERING.out.versions)
 
     //
     // Collate and save software versions
@@ -52,24 +68,24 @@ workflow METAPATHOGEN {
     //
     // MODULE: MultiQC
     //
-    ch_multiqc_config        = Channel.fromPath(
+    ch_multiqc_config        = channel.fromPath(
         "$projectDir/assets/multiqc_config.yml", checkIfExists: true)
     ch_multiqc_custom_config = params.multiqc_config ?
-        Channel.fromPath(params.multiqc_config, checkIfExists: true) :
-        Channel.empty()
+        channel.fromPath(params.multiqc_config, checkIfExists: true) :
+        channel.empty()
     ch_multiqc_logo          = params.multiqc_logo ?
-        Channel.fromPath(params.multiqc_logo, checkIfExists: true) :
-        Channel.empty()
+        channel.fromPath(params.multiqc_logo, checkIfExists: true) :
+        channel.empty()
 
     summary_params      = paramsSummaryMap(
         workflow, parameters_schema: "nextflow_schema.json")
-    ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))
+    ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
     ch_multiqc_files = ch_multiqc_files.mix(
         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_custom_methods_description = params.multiqc_methods_description ?
         file(params.multiqc_methods_description, checkIfExists: true) :
         file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-    ch_methods_description                = Channel.value(
+    ch_methods_description                = channel.value(
         methodsDescriptionText(ch_multiqc_custom_methods_description))
 
     ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
@@ -89,7 +105,7 @@ workflow METAPATHOGEN {
         []
     )
 
-    emit:multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    emit: multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 
 }

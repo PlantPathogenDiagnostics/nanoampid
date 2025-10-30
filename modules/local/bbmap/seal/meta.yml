@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+# # TODO nf-core: Add a description of the module and list keywords
+name: "bbmap"
+description: write your description here
+keywords:
+- sort
+- example
+- genomics
+tools:
+## TODO nf-core: Add a description and other details for the software below
+- "bbmap":
+    description: "BBMap is a short read aligner, as well as various other bioinformatic
+      tools."
+    homepage: "https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide"
+    documentation: "https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide"
+    tool_dev_url: "https://sourceforge.net/projects/bbmap"
+    doi: ""
+    licence: ['UC-LBL license (see package)']
+    identifier: biotools:bbmap
+
+input:
+# TODO nf-core: Update the information obtained from bio.tools and make sure that it is correct
+  []
+output:
+# TODO nf-core: Update the information obtained from bio.tools and make sure that it is correct
+  versions: -
+    versions.yml:
+      type: file
+      description: File containing software versions
+      pattern: versions.yml
+      ontologies:
+      - edam: http://edamontology.org/format_3750  # YAML
+authors:
+- "@snunzi"
+maintainers:
+- "@snunzi"
