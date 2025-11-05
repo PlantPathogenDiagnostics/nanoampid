@@ -5,9 +5,9 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
-                    "bbmap/bbduk": {
+                    "cdhit/cdhitest": {
                         "branch": "master",
-                        "git_sha": "3351c212144fc8aab0e595165bf447ebecfebd8a",
+                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
                         "installed_by": ["modules"]
                     },
                     "chopper": {

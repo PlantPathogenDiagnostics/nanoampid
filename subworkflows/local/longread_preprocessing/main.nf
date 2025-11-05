@@ -7,11 +7,13 @@ include { PORECHOP_ABI                     } from '../../../modules/nf-core/pore
 include { NANOQ as NANOQ_RAW               } from '../../../modules/nf-core/nanoq'
 include { NANOQ as NANOQ_FILTERED          } from '../../../modules/nf-core/nanoq'
 include { CHOPPER                          } from '../../../modules/nf-core/chopper'
+include { VSEARCH_ORIENT                   } from '../../../modules/local/vsearch/orient/main'
 
 
 workflow LONGREAD_PREPROCESSING {
     take:
     ch_samplesheet // [ [meta] , fastq] (mandatory)
+    ch_reference  // channel: [ path(reference_fasta)]
 
     main:
     ch_versions = Channel.empty()
@@ -46,7 +48,14 @@ workflow LONGREAD_PREPROCESSING {
         []
     )
     ch_versions = ch_versions.mix(CHOPPER.out.versions)
-    ch_long_reads = CHOPPER.out.fastq
+    // ch_long_reads = CHOPPER.out.fastq
+
+    VSEARCH_ORIENT (
+        CHOPPER.out.fastq,
+        ch_reference
+    )
+    ch_versions = ch_versions.mix(VSEARCH_ORIENT.out.versions)
+    ch_long_reads = VSEARCH_ORIENT.out.reads
 
     NANOQ_FILTERED(
         ch_long_reads

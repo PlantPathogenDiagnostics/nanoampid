@@ -12,7 +12,7 @@ process BBMAP_SEAL {
     path reference
 
     output:
-    tuple val(meta), path("*.fq")        , emit: reads
+    tuple val(meta), path("*.fastq.gz")        , emit: reads
     tuple val(meta), path('*.log')       , emit: log
     path "versions.yml"                  , emit: versions
 
