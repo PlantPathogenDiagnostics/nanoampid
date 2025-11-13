@@ -12,6 +12,7 @@ process CDHIT_CDHITEST {
 
     output:
     tuple val(meta), path("*.{fa,fq}")    ,emit: fasta
+    tuple val(meta), path("*.{txt}")      ,emit: consensus_ids
     tuple val(meta), path("*.clstr")      ,emit: clusters
     path "versions.yml"                   ,emit: versions
 
@@ -36,6 +37,7 @@ process CDHIT_CDHITEST {
         -o ${meta.id}.${suffix} \\
         -M $avail_mem \\
         -T $task.cpus
+    grep "^>" ${prefix}.fa | sed 's/^>//' > ${prefix}.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

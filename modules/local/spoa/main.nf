@@ -11,16 +11,16 @@ process SPOA {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*.fasta") , emit: fasta
-    path "versions.yml"              , emit: versions
+    tuple val(meta), path("*.fasta")                 , emit: consensus
+    path "versions.yml"                              , emit: versions
+    tuple val(meta), path("*read_count.txt")         , emit: read_count
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args     = task.ext.args ?: ''
-    def key      = reads.getSimpleName().replace("${meta.id}_", '')
-    def prefix   = task.ext.prefix ?: "${meta.id}_${key}_ref"
+    def prefix   = task.ext.prefix ?: "${meta.id}_${meta.cluster}_ref"
     def raw      = "${reads[0]}"
     """
     spoa \\
@@ -28,6 +28,11 @@ process SPOA {
         $args \\
         > ${prefix}.fasta \\
 
+    # Add number of reads used for consensus to fasta header
+    zcat ${reads} | wc -l | awk '{print \$1 / 4}' > ${meta.id}_${meta.cluster}_read_count.txt
+    read_count=\$(zcat ${reads} | wc -l | awk '{print \$1 / 4}') 
+    awk -v read_count="\$read_count" 'BEGIN {i=0}  /^>/{i++; print ">"read_count; next} {print}' ${prefix}.fasta > ${prefix}_temp.fasta
+    mv ${prefix}_temp.fasta ${prefix}.fasta
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -37,8 +42,7 @@ process SPOA {
 
     stub:
     def args = task.ext.args ?: ''
-    def key      = reads.getSimpleName().replace("${meta.id}_", '')
-    def prefix   = task.ext.prefix ?: "${meta.id}_${key}_ref"
+    def prefix   = task.ext.prefix ?: "${meta.id}_${meta.cluster}_ref"
 
     """
     echo $args

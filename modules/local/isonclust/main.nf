@@ -33,7 +33,8 @@ process ISONCLUST {
         write_fastq \\
         --clusters ${prefix}.tsv \\
         --fastq ${prefix}_temp.fastq \\
-        --outfolder .
+        --outfolder . \\
+        --N 5
     rm ${prefix}_temp.fastq
     gzip *.fastq
     cat <<-END_VERSIONS > versions.yml
