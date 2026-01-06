@@ -4,19 +4,23 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { MULTIQC                 } from '../modules/nf-core/multiqc/main'
-include { paramsSummaryMap        } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc    } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML  } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText  } from '../subworkflows/local/utils_nfcore_metapathogen_pipeline'
+include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
+include { paramsSummaryMap              } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc          } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML        } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText        } from '../subworkflows/local/utils_nfcore_metapathogen_pipeline'
 
-include { createFileChannel               } from '../subworkflows/local/utils_nfcore_metapathogen_pipeline'
+include { createFileChannel             } from '../subworkflows/local/utils_nfcore_metapathogen_pipeline'
 
-//
-// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
-//
-include { LONGREAD_PREPROCESSING  }       from '../subworkflows/local/longread_preprocessing/main'
-include { REFERENCE_BASED_CLUSTERING }    from '../subworkflows/local/reference_based_clustering/main'
+// Preprocessing
+include { LONGREAD_PREPROCESSING        } from '../subworkflows/local/longread_preprocessing/main'
+
+// Reference-based clustering and consensus generation
+include { REFERENCE_BASED_CLUSTERING    } from '../subworkflows/local/reference_based_clustering/main'
+
+// Consensus classification
+include { BLAST_MAKEBLASTDB             } from '../modules/nf-core/blast/makeblastdb/main'
+// include { CLASSIFY_CONSENSUS            } from '../subworkflows/local/classify_consensus/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,7 +56,28 @@ workflow METAPATHOGEN {
         ch_reference
     )
 
+    ch_consensus = REFERENCE_BASED_CLUSTERING.out.consensus
     ch_versions = ch_versions.mix(REFERENCE_BASED_CLUSTERING.out.versions)
+
+
+    // Create BLAST database from reference sequences
+        ch_reference_with_meta = ch_reference.map {
+            item -> [['id': "id-fasta-for-makeblastdb"], item]
+            }
+
+
+    BLAST_MAKEBLASTDB (
+         ch_reference_with_meta
+     )
+     ch_versions = ch_versions.mix(BLAST_MAKEBLASTDB.out.versions.first())
+     // ch_blast_refdb = BLAST_MAKEBLASTDB.out.db()
+
+    // Classify consensus sequences
+    // CLASSIFY_CONSENSUS (
+    //     ch_consensus,
+    //    ch_blast_refdb
+    // )
+    // ch_versions = ch_versions.mix(CLASSIFY_CONSENSUS.out.versions.first())
 
     //
     // Collate and save software versions

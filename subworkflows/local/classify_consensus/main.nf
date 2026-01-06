@@ -4,32 +4,26 @@
 //               https://nf-co.re/join
 // TODO nf-core: A subworkflow SHOULD import at least two modules
 
-include { SAMTOOLS_SORT      } from '../../../modules/nf-core/samtools/sort/main'
-include { SAMTOOLS_INDEX     } from '../../../modules/nf-core/samtools/index/main'
+include { BLAST_BLASTN      } from '../../../modules/nf-core/blast/blastn/main'
 
 workflow CLASSIFY_CONSENSUS {
 
     take:
-    // TODO nf-core: edit input (take) channels
-    ch_bam // channel: [ val(meta), [ bam ] ]
+    ch_consensus                 // channel: [ val(meta), [ fasta ] ]
+    ch_blast_refdb               // channel: [ path(blast_db) ]
 
     main:
 
     ch_versions = Channel.empty()
 
-    // TODO nf-core: substitute modules here for the modules of your subworkflow
 
-    SAMTOOLS_SORT ( ch_bam )
-    ch_versions = ch_versions.mix(SAMTOOLS_SORT.out.versions.first())
+    BLAST_BLASTN ( ch_consensus, ch_blast_refdb, [], [], [] )
+    ch_versions = ch_versions.mix(BLAST_BLASTN.out.versions.first())
 
-    SAMTOOLS_INDEX ( SAMTOOLS_SORT.out.bam )
-    ch_versions = ch_versions.mix(SAMTOOLS_INDEX.out.versions.first())
 
     emit:
     // TODO nf-core: edit emitted channels
-    bam      = SAMTOOLS_SORT.out.bam           // channel: [ val(meta), [ bam ] ]
-    bai      = SAMTOOLS_INDEX.out.bai          // channel: [ val(meta), [ bai ] ]
-    csi      = SAMTOOLS_INDEX.out.csi          // channel: [ val(meta), [ csi ] ]
+    // summary      = SAMTOOLS_SORT.out.bam           // channel: [ val(meta), [ bam ] ]
 
     versions = ch_versions                     // channel: [ versions.yml ]
 }

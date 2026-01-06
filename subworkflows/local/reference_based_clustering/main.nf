@@ -9,7 +9,7 @@ include { CDHIT_CDHITEST  }     from '../../../modules/nf-core/cdhit/cdhitest/ma
 include { CONCAT_FILES    }     from '../../../modules/local/concat_files/main'
 include { MINIMAP2_ALIGN  }     from '../../../modules/nf-core/minimap2/align/main'
 include { RACON           }     from '../../../modules/nf-core/racon/main'
-include { MEDAKA          }      from '../../../modules/local/medaka/main' 
+include { MEDAKA          }     from '../../../modules/local/medaka/main' 
 
 workflow REFERENCE_BASED_CLUSTERING {
 
@@ -144,26 +144,21 @@ workflow REFERENCE_BASED_CLUSTERING {
         ch_mapped_reads
     )
     ch_versions = ch_versions.mix(CDHIT_CDHITEST.out.versions.first())
-    ch_mapped_reads = CDHIT_CDHITEST.out.fasta.view()
+    //ch_mapped_reads = CDHIT_CDHITEST.out.fasta
 
+    ch_consensus = CDHIT_CDHITEST.out.fasta.map { _meta, file ->
+        def consensus = file.splitFasta( record: [id: true, sequence: false])
+        ( consensus.id )
+        }.flatten()
 
-    ch_consensus= ch_mapped_reads
-        .map { meta, consensus ->
-        def clust = consensus.splitText().find{ it.startsWith('>') } .substring(1).trim()
-        def meta_updated = clust
-        tuple(meta_updated)
-        }
+    ch_mapped_reads_flattened_final = ch_mapped_reads_flattened.map { meta, consensus, _reads, _ref, _paf, _racon -> 
+        tuple(meta.id+'_'+meta.cluster, meta, consensus)}
+
+    ch_consensus = ch_consensus.combine(ch_mapped_reads_flattened_final, by:0).map { _id, meta, consensus ->
+        tuple( meta, consensus )}
         .view()
 
-
-    
-    //ch_mapped_reads_flattened_final = ch_mapped_reads_flattened.map { meta, consensus, _reads, _ref, _paf, _racon -> 
-    //    tuple(meta.id+'_'+meta.cluster, meta, consensus)}
-
-    //ch_final = ch_consensus.combine(ch_mapped_reads_flattened_final, by:0)
-    //    .view()
-
     emit:
-    reads      = ch_mapped_reads                 // channel: [ val(meta), [ fastq ] ]
-    versions   = ch_versions                     // channel: [ versions.yml ]
+    consensus      = ch_consensus                 // channel: [ val(meta), [ fasta ] ]
+    versions       = ch_versions                  // channel: [ versions.yml ]
 }
