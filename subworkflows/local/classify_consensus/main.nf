@@ -1,8 +1,7 @@
-// TODO nf-core: If in doubt look at other nf-core/subworkflows to see how we are doing things! :)
-//               https://github.com/nf-core/modules/tree/master/subworkflows
-//               You can also ask for help via your pull request or on the #subworkflows channel on the nf-core Slack workspace:
-//               https://nf-co.re/join
-// TODO nf-core: A subworkflow SHOULD import at least two modules
+/*
+CLASSIFY_CONSENSUS: Classifies contigs using blastn against a reference database and filters results based on user-defined thresholds.
+*/
+
 
 include { BLAST_BLASTN      } from '../../../modules/nf-core/blast/blastn/main'
 
@@ -16,9 +15,13 @@ workflow CLASSIFY_CONSENSUS {
 
     ch_versions = Channel.empty()
 
-
-    BLAST_BLASTN ( ch_consensus, ch_blast_refdb, [], [], [] )
+    // Classify consensus sequences with blastn
+    BLAST_BLASTN ( 
+        ch_consensus, ch_blast_refdb, [], [], [] 
+        )
+    
     ch_versions = ch_versions.mix(BLAST_BLASTN.out.versions.first())
+
 
 
     emit:

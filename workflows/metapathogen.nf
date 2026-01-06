@@ -20,7 +20,7 @@ include { REFERENCE_BASED_CLUSTERING    } from '../subworkflows/local/reference_
 
 // Consensus classification
 include { BLAST_MAKEBLASTDB             } from '../modules/nf-core/blast/makeblastdb/main'
-// include { CLASSIFY_CONSENSUS            } from '../subworkflows/local/classify_consensus/main'
+include { CLASSIFY_CONSENSUS            } from '../subworkflows/local/classify_consensus/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -67,17 +67,17 @@ workflow METAPATHOGEN {
 
 
     BLAST_MAKEBLASTDB (
-         ch_reference_with_meta
+        ch_reference_with_meta
      )
      ch_versions = ch_versions.mix(BLAST_MAKEBLASTDB.out.versions.first())
-     // ch_blast_refdb = BLAST_MAKEBLASTDB.out.db()
+     ch_blast_refdb = BLAST_MAKEBLASTDB.out.db.first()
 
     // Classify consensus sequences
-    // CLASSIFY_CONSENSUS (
-    //     ch_consensus,
-    //    ch_blast_refdb
-    // )
-    // ch_versions = ch_versions.mix(CLASSIFY_CONSENSUS.out.versions.first())
+    CLASSIFY_CONSENSUS (
+        ch_consensus,
+        ch_blast_refdb
+     )
+     ch_versions = ch_versions.mix(CLASSIFY_CONSENSUS.out.versions.first())
 
     //
     // Collate and save software versions
