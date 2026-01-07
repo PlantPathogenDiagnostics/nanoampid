@@ -121,6 +121,7 @@ workflow METAPATHOGEN {
             sort: true
         )
     )
+    ch_multiqc_files       =  ch_multiqc_files.mix(CLASSIFY_CONSENSUS.out.no_blast_hits.ifEmpty([]))
 
     MULTIQC (
         ch_multiqc_files.collect(),

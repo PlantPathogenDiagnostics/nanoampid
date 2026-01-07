@@ -175,6 +175,38 @@ def validateInputSamplesheet(input) {
 
     return [ metas[0], fastqs ]
 }
+
+def multiqcTsvFromList(tsv_data, header, comments) {
+    def tsv_string = ""
+    if (tsv_data.size() > 0) {
+        if (comments) tsv_string += "# ${comments.join('\n# ')}\n"
+        tsv_string += "${header.join('\t')}\n"
+        tsv_string += tsv_data.join('\n')
+    }
+    return tsv_string
+}
+
+def noBlastHitsToMultiQC(tsv_data) {
+    tsv_data
+        .map { meta, _txt, fasta ->
+            def n_fasta = fasta.countFasta()
+            ["$meta.sample\t$n_fasta"]}
+        .collect()
+        .map { tsv ->
+            multiqcTsvFromList(tsv,
+                ['sample name', "number of contigs"],
+                [
+                    "id: 'samples_without_blast_hits'",
+                    "anchor: 'WARNING: Filtered samples'",
+                    "section_name: 'Samples without blast hits'",
+                    "format: 'tsv'",
+                    "description: 'Samples that did not have any blast hits for their contigs were not included in further analyses'",
+                    "plot_type: 'table'"
+                ]
+            )
+        }
+}
+
 //
 // Get attribute from genome config file e.g. fasta
 //
