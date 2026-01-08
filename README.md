@@ -13,7 +13,7 @@
 
 ## Introduction
 
-**PlantPathogenDiagnostics/metapathogen** is a bioinformatics pipeline that ...
+**PlantPathogenDiagnostics/metapathogen** is a bioinformatics pipeline that generates consensus sequences with classification from amplicon data.
 
 <!-- TODO nf-core:
    Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
