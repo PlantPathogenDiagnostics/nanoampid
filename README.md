@@ -54,7 +54,8 @@ Now, you can run the pipeline using:
 nextflow run PlantPathogenDiagnostics/metapathogen \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
-   --outdir <OUTDIR>
+   --outdir <OUTDIR> \
+   --reference <fasta of ref sequences>
 ```
 
 > [!WARNING]

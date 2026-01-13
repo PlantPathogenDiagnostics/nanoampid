@@ -28,19 +28,21 @@ workflow REFERENCE_BASED_CLUSTERING {
         ch_reference
     )
     ch_versions = ch_versions.mix(BBMAP_SEAL.out.versions.first())
-    ch_mapped_reads = BBMAP_SEAL.out.reads.map{meta, reads -> tuple(meta, reads.findAll{ it -> it.countFastq() > 5 })} // Filter for references with at least 5 mapped reads
+    ch_seal_reads = BBMAP_SEAL.out.reads.map{meta, reads -> tuple(meta, reads.findAll{ it -> it.countFastq() > 5 })} // Filter for references with at least 5 mapped reads
 
     // Cluster by reference-free clustering with ISONCLUST
     ISONCLUST (
         ch_long_reads
     )
     ch_versions = ch_versions.mix(ISONCLUST.out.versions.first())
-    ch_mapped_reads = ch_mapped_reads.combine(ISONCLUST.out.reads, by:0)
+    ch_isonclust_reads = ISONCLUST.out.reads.view()
+
+    // Merge reads belonging to
+    ch_mapped_reads = ch_seal_reads.combine(ch_isonclust_reads, by: 0)
         .map { meta, mapped_reads, isonclust_reads ->
             def all_reads = mapped_reads + isonclust_reads
             tuple( meta, all_reads )
         }
-
 
     // Flatten mapped reads channel for processing in FILTLONG
     ch_mapped_reads_flattened = ch_mapped_reads.flatMap { meta, file_list  ->
