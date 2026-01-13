@@ -5,7 +5,7 @@ process SPOA {
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/spoa%3A4.1.5--h077b44d_0' :
-        'community.wave.seqera.io/library/spoa:4.1.5--h077b44d_0' }"
+        'community.wave.seqera.io/library/spoa:4.1.5--8096d8f407f3177c' }"
 
     input:  
     tuple val(meta), path(reads)

@@ -35,7 +35,7 @@ workflow REFERENCE_BASED_CLUSTERING {
         ch_long_reads
     )
     ch_versions = ch_versions.mix(ISONCLUST.out.versions.first())
-    ch_isonclust_reads = ISONCLUST.out.reads.view()
+    ch_isonclust_reads = ISONCLUST.out.reads
 
     // Merge reads belonging to
     ch_mapped_reads = ch_seal_reads.combine(ch_isonclust_reads, by: 0)
