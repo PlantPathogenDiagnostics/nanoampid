@@ -71,8 +71,8 @@ workflow METAPATHOGEN {
     BLAST_MAKEBLASTDB (
         ch_reference_with_meta
      )
-     ch_versions = ch_versions.mix(BLAST_MAKEBLASTDB.out.versions.first())
-     ch_blast_refdb = BLAST_MAKEBLASTDB.out.db.first()
+     ch_versions = ch_versions.mix(BLAST_MAKEBLASTDB.out.versions)
+     ch_blast_refdb = BLAST_MAKEBLASTDB.out.db.collect{it[1]}.ifEmpty([]).map{it -> [[id: 'reference'], it]}
 
     // Classify consensus sequences
     CLASSIFY_CONSENSUS (

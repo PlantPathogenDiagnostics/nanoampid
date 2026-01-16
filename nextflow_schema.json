@@ -60,12 +60,12 @@
                 "min_ref_cov": {
                     "type": "number",
                     "description": "Minimum percent coverage to the reference.",
-                    "default": 50
+                    "default": 90
                 },
                 "max_con_len": {
                     "type": "number",
                     "description": "Maximum length of consensus sequence.",
-                    "default": "1000"
+                    "default": 1000
                 },
                 "max_mismatch": {
                     "type": "number",
