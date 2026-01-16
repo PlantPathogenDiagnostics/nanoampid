@@ -46,6 +46,34 @@
                 }
             }
         },
+        "blastn_filter_options": {
+            "title": "BLASTn filtering cutoffs",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "min_pident": {
+                    "type": "number",
+                    "description": "Minimum percent identity to the reference.",
+                    "default": 95
+                },
+                "min_ref_cov": {
+                    "type": "number",
+                    "description": "Minimum percent coverage to the reference.",
+                    "default": 50
+                },
+                "max_con_len": {
+                    "type": "number",
+                    "description": "Maximum length of consensus sequence.",
+                    "default": "1000"
+                },
+                "max_mismatch": {
+                    "type": "number",
+                    "description": "Maximum number of nucleotide mismatches with the reference.",
+                    "default": 11
+                }
+            }
+        },
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -265,6 +293,9 @@
         },
         {
             "$ref": "#/$defs/read_qc_options"
+        },
+        {
+            "$ref": "#/$defs/blastn_filter_options"
         },
         {
             "$ref": "#/$defs/input_output_options"

@@ -40,6 +40,7 @@ workflow METAPATHOGEN {
     ch_multiqc_files = channel.empty()
     ch_long_reads    = channel.empty()
 
+
     ch_reference = createFileChannel(params.reference)
 
 
@@ -50,6 +51,7 @@ workflow METAPATHOGEN {
     ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(LONGREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
     ch_long_reads = ch_long_reads.mix(LONGREAD_PREPROCESSING.out.long_reads)
+    ch_read_counts = LONGREAD_PREPROCESSING.out.read_counts
 
     REFERENCE_BASED_CLUSTERING(
         ch_long_reads,
@@ -75,7 +77,8 @@ workflow METAPATHOGEN {
     // Classify consensus sequences
     CLASSIFY_CONSENSUS (
         ch_consensus,
-        ch_blast_refdb
+        ch_blast_refdb,
+        ch_read_counts
      )
      ch_versions = ch_versions.mix(CLASSIFY_CONSENSUS.out.versions.first())
 

@@ -1,41 +1,140 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-This script takes a list of blastn files for each contig assembled from a single sample. It filters the best hit for each contig, and takes the most complete and highest identity contig for each species identified in the sample.
+This script takes blast output from MetaLong pipeline and filters the best hit for each contig then reports the most complete and highest identity contig for each species identified in the sample.
 
 @author: sonunziata
 """
 
+import argparse
+import sys
 import pandas as pd
+from pathlib import Path
 
-ref_cov_cutoff = float(50)
-pident_cutoff = float(95)
-mismatch_cutoff = float(11)
-con_len_cutoff = float(1000)
 
-#blast_files = ['phytophthora_bar01_0.txt', 'phytophthora_bar01_1.txt', 'phytophthora_bar01_ITS_P_niederhauserii_ET_ST-BL45_MG865552.txt', 'phytophthora_bar01_ITS_P_ramorum_ET_ST_BL_55G_MG865581_1.txt']
+parser = argparse.ArgumentParser(description="Provide a command line tool to filter blastn results",epilog="Example: python filter_blastn_contigs.py blast.txt reads.txt")
 
-blast_files = ['phytophthora_bar12_0.txt','phytophthora_bar12_1.txt','phytophthora_bar12_2.txt', 'phytophthora_bar12_4.txt','phytophthora_bar12_ITS_P_chilensis_ET_CBS148797_ON000726.txt','phytophthora_bar12_ITS_P_chlamydospora_ET_ST-BL156_MG865471.txt','phytophthora_bar12_ITS_P_kernoviae_ET_ST-BL91_MG865521.txt','phytophthora_bar12_ITS_P_pseudokernoviae_ET_CBS148796_ON000780.txt','phytophthora_bar12_ITS_P_syringae_ENT_ST-BL57G_MG865590.txt']
+parser.add_argument(
+    "blast",
+    metavar="BLAST FILE",
+    type=Path,
+    help="Blast result file in specific out format.",
+)
 
-#Read each file into a df and combine them
-df_list = [pd.read_csv(file, sep='\t', header=None, names=['qseqid', 'pident', 'slen', 'qlen', 'length', 'qcovs', 'mismatch', 'gapopen', 'evalue', 'bitscore', 'salltitles']) for file in blast_files]
-combined_df = pd.concat(df_list, ignore_index=True)
+parser.add_argument(
+    "read_counts",
+    metavar="READS",
+    type=Path,
+    help="Read count file.",
+)
 
-combined_df['%_Ref_Cov'] = 100* (combined_df['length']/combined_df['slen'])
+parser.add_argument(
+    "-o",
+    "--outfile",
+    metavar="OUTFILE",
+    type=Path,
+    help="Output file name",
+    default="summary_out.xlsx"
+)
+
+parser.add_argument(
+    "-a",
+    "--min_ref_cov",
+    metavar="alignment",
+    type=float,
+    help="percentage of query alignment length cutoff",
+    default=50,
+)
+
+parser.add_argument(
+    "-i",
+    "--min_pident",
+    metavar="identity",
+    type=float,
+    help="percentage identity to reference cutoff",
+    default=95,
+)
+
+parser.add_argument(
+    "-m",
+    "--max_mismatch",
+    metavar="mismatch",
+    type=float,
+    help="maximum number of nucleotide mismatches with the reference",
+    default=11,
+)
+
+parser.add_argument(
+    "-c",
+    "--max_con_len",
+    metavar="conlength",
+    type=float,
+    help="maximum length of the consensus length cutoff",
+    default=1000,
+)
+args = parser.parse_args()
+
+
+#Read in sample metadata and file locations of blast and consensus fasta
+all_results = pd.read_csv(args.blast, header=None, names=['Barcode','Cluster','Read Count','consensus','blast'])
+
+#Create a dataframe with metadata and blast information for all samples
+summary_consensus = []
+
+for r in all_results.itertuples(index=False):
+    new_data = pd.read_csv(r[4],sep='\t', header=None,names=['qseqid', 'pident', 'Ref Length', 'Consensus Length', 'length', 'qcovs', 'mismatch', 'gapopen', 'evalue', 'bitscore', 'Ref Sequence'])
+    with open (r[3]) as fh: 
+        next(fh) 
+        new_data['Sequence'] = next(fh) 
+    new_data[['Barcode','Cluster','Read Count']] = r[:3]
+    new_data['qseqid'] = new_data['Barcode']+'_'+new_data['Cluster']
+    summary_consensus.append(new_data)
+
+combined_df = pd.concat(summary_consensus, ignore_index=True)
+
+#Calculate portion of reference covered by consensus sequence
+combined_df['%_Ref_Cov'] = 100* (combined_df['length']/combined_df['Ref Length'])
 
 #Filter by parameters
-combined_df= combined_df[combined_df['%_Ref_Cov'] > ref_cov_cutoff]
-combined_df = combined_df[combined_df['pident'] > pident_cutoff]
-combined_df = combined_df[combined_df['qlen'] < con_len_cutoff]
+combined_df= combined_df[combined_df['%_Ref_Cov'] > args.min_ref_cov]
+combined_df = combined_df[combined_df['pident'] > args.min_pident]
+combined_df = combined_df[combined_df['Consensus Length'] < args.max_con_len]
 combined_df = combined_df.dropna()
+
+
 
 #Get the hit with the highest %id for each contig
 groups = combined_df.groupby(by=['qseqid'], as_index=False, sort=False)
 summary_filtered = groups.apply(lambda g: g[g['pident'] == g['pident'].max()])
 
-#If multiple contigs hit the same reference, retain the reference with the highest pident
-groups = summary_filtered.groupby(by=['salltitles'], as_index=False, sort=False)
-summary_filtered = groups.apply(lambda g: g[g['pident'] == g['pident'].max()])
 
-summary_filtered.to_csv('filtered.csv', index=False)
-combined_df.to_csv('all.csv', index=False)
+#If multiple contigs hit the same reference within a sample, retain the contig with the longest contig with the highest pident
+groups = summary_filtered.groupby(by=['Barcode','Ref Sequence'], as_index=False, sort=False)
+summary_filtered = groups.apply(lambda g: g[g['pident'] == g['pident'].max()])
+summary_filtered = groups.apply(lambda g: g[g['Consensus Length'] == g['Consensus Length'].max()])
+
+#Organize columns for output
+# Define the new order of columns
+new_order = ['Barcode', 'Cluster', 'Read Count','Ref Sequence','pident', 'Ref Length', 'Consensus Length', 'mismatch', 'gapopen', 'evalue', 'bitscore', '%_Ref_Cov', 'Sequence']
+
+# Reassign the DataFrame with the new column order
+summary_filtered = summary_filtered[new_order]
+combined_df = combined_df[new_order]
+
+#Create read count table
+read_columns=['Barcode', 'Raw Reads', 'Filtered Reads']
+reads=pd.read_csv(args.read_counts, header=None, names=read_columns)
+reads[read_columns]= reads[read_columns].apply(lambda x: x.astype(str).str.strip('[]'))
+
+
+
+# create excel writer
+writer = pd.ExcelWriter(args.outfile)
+# write dataframe to excel sheet
+reads.to_excel(writer, 'read_summary', index=False)
+if summary_filtered is not None:
+	summary_filtered.to_excel(writer, 'blastn_summary', index=False)
+if combined_df is not None:
+	combined_df.to_excel(writer, 'blastn_unfiltered', index=False)
+
+writer.close()

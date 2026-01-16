@@ -3,14 +3,16 @@ CLASSIFY_CONSENSUS: Classifies contigs using blastn against a reference database
 */
 
 
-include { BLAST_BLASTN      }      from '../../../modules/nf-core/blast/blastn/main'
-include { noBlastHitsToMultiQC  }  from '../utils_nfcore_metapathogen_pipeline'
+include { BLAST_BLASTN          }      from '../../../modules/nf-core/blast/blastn/main'
+include { noBlastHitsToMultiQC  }      from '../utils_nfcore_metapathogen_pipeline'
+include { BLASTNFILTER          }      from '../../../modules/local/blastnfilter/main'
 
 workflow CLASSIFY_CONSENSUS {
 
     take:
     ch_consensus                 // channel: [ val(meta), [ fasta ] ]
     ch_blast_refdb               // channel: [ path(blast_db) ]
+    ch_read_counts               // channel: [ val(meta) ]
 
     main:
 
@@ -34,7 +36,31 @@ workflow CLASSIFY_CONSENSUS {
 
     ch_no_blast_hits_mqc = noBlastHitsToMultiQC(ch_no_blast_hits).collectFile(name:'samples_no_blast_hits_mqc.tsv')
 
+    ch_consensus = ch_consensus.combine(ch_blast_txt.hits, by:0).map { meta, consensus, blast ->
+        tuple( meta, consensus, blast )}
+    
+    // Convert channel to file for python filtering and summary
+    ch_consensus = ch_consensus
+        .collectFile(
+            name: 'blast_results.csv',
+            newLine: true
+        ) { meta, consensus, blast ->
+            "${meta.id},${meta.cluster},${meta.read_count},${consensus},${blast}"
+        }
 
+    ch_read_counts = ch_read_counts
+        .collectFile(
+            name: 'read_count_results.csv',
+            newLine: true
+        ) { meta ->
+            "${meta.id},${meta.raw},${meta.filtered}"
+        }
+        .view()
+
+    BLASTNFILTER(
+        ch_consensus,
+        ch_read_counts
+    )
 
 
     emit:

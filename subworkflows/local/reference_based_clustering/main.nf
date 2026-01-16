@@ -158,7 +158,6 @@ workflow REFERENCE_BASED_CLUSTERING {
 
     ch_consensus = ch_consensus.combine(ch_mapped_reads_flattened_final, by:0).map { _id, meta, consensus ->
         tuple( meta, consensus )}
-        .view()
 
     emit:
     consensus      = ch_consensus                 // channel: [ val(meta), [ fasta ] ]
