@@ -11,7 +11,7 @@ process BLASTNFILTER {
     path(meta2)
 
     output:
-    path("*.xlsx")                     , emit: blastsummary
+    path("*.xlsx")                          , emit: blastsummary
     path "versions.yml"                     , emit: versions
 
     when:

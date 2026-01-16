@@ -80,7 +80,7 @@ workflow LONGREAD_PREPROCESSING {
         meta.raw=raw
         meta.filtered=filtered
         return tuple(meta)
-    }.view()
+    }
 
 
 

@@ -55,7 +55,6 @@ workflow CLASSIFY_CONSENSUS {
         ) { meta ->
             "${meta.id},${meta.raw},${meta.filtered}"
         }
-        .view()
 
     BLASTNFILTER(
         ch_consensus,
