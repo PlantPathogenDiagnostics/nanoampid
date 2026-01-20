@@ -19,6 +19,7 @@ workflow LONGREAD_PREPROCESSING {
     ch_versions = Channel.empty()
     ch_multiqc_files = Channel.empty()
 
+    // QC of raw reads
     NANOQ_RAW(
         ch_samplesheet
     )
@@ -28,13 +29,11 @@ workflow LONGREAD_PREPROCESSING {
 	// Get number of raw reads for each sample
     ch_read_counts = ch_samplesheet
         .map { meta, files ->
-            // Update the meta map to include the count
-            // files[0] or files[1] can be used to get one of the files for counting
             def count = files[0].countFastq()
-            // raw = count // Add a new 'count' key to the meta map
             return tuple(meta, count)
         }
 
+    // Adapter trimming with porechop or porechop_abi
     if (params.adaptertrimming_tool == 'porechop_abi') {
         PORECHOP_ABI(
             ch_samplesheet,
@@ -53,13 +52,15 @@ workflow LONGREAD_PREPROCESSING {
         ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_PORECHOP.out.log)
     }
 
+    // Filter reads by quality and length
     CHOPPER(
         ch_long_reads,
         []
     )
     ch_versions = ch_versions.mix(CHOPPER.out.versions)
+    ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_PORECHOP.out.log)
 
-
+    //Orient direction of reads based on reference database
     VSEARCH_ORIENT (
         CHOPPER.out.fastq,
         ch_reference
@@ -67,6 +68,7 @@ workflow LONGREAD_PREPROCESSING {
     ch_versions = ch_versions.mix(VSEARCH_ORIENT.out.versions)
     ch_long_reads = VSEARCH_ORIENT.out.reads
 
+    // QC of filtered reads
     NANOQ_FILTERED(
         ch_long_reads
     )

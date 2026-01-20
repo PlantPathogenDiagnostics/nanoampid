@@ -13,7 +13,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { METAPATHOGEN  } from './workflows/metapathogen'
+include { METAPATHOGEN            } from './workflows/metapathogen'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_metapathogen_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_metapathogen_pipeline'
 include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_metapathogen_pipeline'

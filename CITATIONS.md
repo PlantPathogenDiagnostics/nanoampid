@@ -10,13 +10,57 @@
 
 ## Pipeline tools
 
-- [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+- [seal.sh/BBTools](http://sourceforge.net/projects/bbmap/)
 
-> Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
+  > Bushnell B. (2022) BBMap, URL: http://sourceforge.net/projects/bbmap/
+
+- [blast](https://doi.org/10.1186/1471-2105-10-421)
+
+  > Camacho, Christiam et al. “BLAST+: architecture and applications.” BMC bioinformatics vol. 10 421. 15 Dec. 2009, doi:10.1186/1471-2105-10-421
+
+- [cdhit](https://doi.org/10.1093/bioinformatics/bts565)
+
+  > Fu, Limin et al. “CD-HIT: accelerated for clustering the next-generation sequencing data.” Bioinformatics (Oxford, England) vol. 28,23 (2012): 3150-2. doi:10.1093/bioinformatics/bts565
+
+- [Chopper](https://doi.org/10.1093/bioinformatics/bty149)
+
+  > De Coster W, D'Hert S, Schultz DT, Cruts M, Van Broeckhoven C. NanoPack: visualizing and processing long-read sequencing data. Bioinformatics. 2018 Aug 1;34(15):2666-2669. doi: 10.1093/bioinformatics/bty149
+
+- [Filtlong](https://github.com/rrwick/Filtlong)
+
+- [isONclust] (https://github.com/ksahlin/isONclust)
+
+  > Kristoffer Sahlin, Paul Medvedev. De Novo Clustering of Long-Read Transcriptome Data Using a Greedy, Quality-Value Based Algorithm, Journal of Computational Biology 2020, 27:4, 472-484. 
+
+- [Medaka](https://github.com/nanoporetech/medaka)
+
+- [minimap2](https://doi.org/10.1093/bioinformatics/bty191)
+
+  > Li, H. (2018). Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics , 34(18), 3094–3100. doi: 10.1093/bioinformatics/bty191
 
 - [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
 
 > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
+
+- [NanoQ](https://github.com/esteinig/nanoq)
+
+> Steinig, E., & Coin, L. (2022). Nanoq: ultra-fast quality control for nanopore reads. Journal of Open Source Software, 7(69), 2991. doi: 10.21105/joss.02991
+
+- [Porechop](https://github.com/rrwick/Porechop)
+
+- [Porechop-abi](https://github.com/bonsai-team/Porechop_ABI)
+
+  > Bonenfant, Q., Noé, L., & Touzet, H. (2022). Porechop_ABI: discovering unknown adapters in ONT sequencing reads for downstream trimming. bioRxiv. 10.1101/2022.07.07.499093
+
+- [Racon](https://github.com/isovic/racon)
+
+  > Li H. Minimap and miniasm: fast mapping and de novo assembly for noisy long sequences. Bioinformatics. 2016 Jul 15;32(14):2103-10. doi: 10.1093/bioinformatics/btw152. Epub 2016 Mar 19. PMID: 27153593; PMCID: PMC4937194.
+
+- [VSEARCH](https://peerj.com/articles/2584/)
+
+  > Rognes T, Flouri T, Nichols B, Quince C, Mahé F. VSEARCH: a versatile open source tool for metagenomics. PeerJ. 2016 4:e2584. doi: 10.7717/peerj.2584
+
+- [Spoa] (https://github.com/rvaser/spoa)
 
 ## Software packaging/containerisation tools
 
