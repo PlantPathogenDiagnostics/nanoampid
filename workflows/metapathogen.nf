@@ -40,10 +40,15 @@ workflow METAPATHOGEN {
     ch_multiqc_files = channel.empty()
     ch_long_reads    = channel.empty()
 
+    /*
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        PARAMETER INITIALIZATION
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
 
-    ch_reference = createFileChannel(params.reference)
+    ch_reference     = createFileChannel(params.reference)
 
-
+    // Preprocessing reads
     LONGREAD_PREPROCESSING(
         ch_samplesheet,
         ch_reference
@@ -53,6 +58,7 @@ workflow METAPATHOGEN {
     ch_long_reads = ch_long_reads.mix(LONGREAD_PREPROCESSING.out.long_reads)
     ch_read_counts = LONGREAD_PREPROCESSING.out.read_counts
 
+    // Cluster and consensus generations
     REFERENCE_BASED_CLUSTERING(
         ch_long_reads,
         ch_reference
@@ -61,11 +67,10 @@ workflow METAPATHOGEN {
     ch_consensus = REFERENCE_BASED_CLUSTERING.out.consensus
     ch_versions = ch_versions.mix(REFERENCE_BASED_CLUSTERING.out.versions)
 
-
     // Create BLAST database from reference sequences
-        ch_reference_with_meta = ch_reference.map {
-            item -> [['id': "id-fasta-for-makeblastdb"], item]
-            }
+    ch_reference_with_meta = ch_reference.map {
+        item -> [['id': "id-fasta-for-makeblastdb"], item]
+        }
 
 
     BLAST_MAKEBLASTDB (
@@ -135,8 +140,8 @@ workflow METAPATHOGEN {
         []
     )
 
-    emit: multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
-    versions       = ch_versions                 // channel: [ path(versions.yml) ]
+    emit: multiqc_report = MULTIQC.out.report.toList()        // channel: /path/to/multiqc_report.html
+    versions             = ch_versions                        // channel: [ path(versions.yml) ]
 
 }
 
