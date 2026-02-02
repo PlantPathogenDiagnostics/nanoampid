@@ -8,13 +8,12 @@ include { PORECHOP_ABI                     } from '../../../modules/nf-core/pore
 include { NANOQ as NANOQ_RAW               } from '../../../modules/nf-core/nanoq'
 include { NANOQ as NANOQ_FILTERED          } from '../../../modules/nf-core/nanoq'
 include { CHOPPER                          } from '../../../modules/nf-core/chopper'
-include { VSEARCH_ORIENT                   } from '../../../modules/local/vsearch/orient/main'
+include { BBMAP_REFORMAT                   } from '../../../modules/local/bbmap/reformat'
 
 
 workflow LONGREAD_PREPROCESSING {
     take:
     ch_samplesheet // [ [meta] , fastq] (mandatory)
-    ch_reference  // channel: [ path(reference_fasta)]
 
     main:
     ch_versions = Channel.empty()
@@ -32,7 +31,7 @@ workflow LONGREAD_PREPROCESSING {
         .map { meta, files ->
             def count = files[0].countFastq()
             return tuple(meta, count)
-        }
+        }.view()
 
     // Remove duplicate reads
     SEQKIT_RMDUP(
@@ -70,16 +69,13 @@ workflow LONGREAD_PREPROCESSING {
     ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_PORECHOP.out.log)
     ch_long_reads = CHOPPER.out.fastq
 
-
-/*
-    //Orient direction of reads based on reference database
-    VSEARCH_ORIENT (
+    //Truncate read names to comply with down-stream processing
+    BBMAP_REFORMAT (
         CHOPPER.out.fastq,
-        ch_reference
     )
-    ch_versions = ch_versions.mix(VSEARCH_ORIENT.out.versions)
-    ch_long_reads = VSEARCH_ORIENT.out.reads.view()
-*/
+    ch_versions = ch_versions.mix(BBMAP_REFORMAT.out.versions)
+    ch_long_reads = BBMAP_REFORMAT.out.reads.view()
+
     // QC of filtered reads
     NANOQ_FILTERED(
         ch_long_reads

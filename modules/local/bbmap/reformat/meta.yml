@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
 # # TODO nf-core: Add a description of the module and list keywords
-name: "renamefastq"
+name: "bbmap_reformat"
 description: write your description here
 keywords:
   - sort
@@ -8,14 +8,15 @@ keywords:
   - genomics
 tools:
   ## TODO nf-core: Add a description and other details for the software below
-  - "renamefastq":
-      description: ""
-      homepage: ""
-      documentation: ""
-      tool_dev_url: ""
+  - "bbmap":
+      description: "BBMap is a short read aligner, as well as various other bioinformatic
+        tools."
+      homepage: "https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide"
+      documentation: "https://jgi.doe.gov/data-and-tools/bbtools/bb-tools-user-guide"
+      tool_dev_url: "https://sourceforge.net/projects/bbmap"
       doi: ""
-      licence: null
-      identifier: null
+      licence: ["UC-LBL license (see package)"]
+      identifier: biotools:bbmap
 
 input:
   ### TODO nf-core: Add a description of all of the variables used as input
@@ -49,14 +50,28 @@ output:
             - edam: "http://edamontology.org/format_2572" # BAM
             - edam: "http://edamontology.org/format_2573" # CRAM
             - edam: "http://edamontology.org/format_3462" # SAM
-  versions:
-    - "versions.yml":
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
-        ontologies:
-          - edam: "http://edamontology.org/format_3750" # YAML
+  versions_bbmap:
+    - - "${task.process}":
+          type: string
+          description: The name of the process
+      - "bbmap":
+          type: string
+          description: The name of the tool
+      - "bbmap --version":
+          type: eval
+          description: The expression to obtain the version of the tool
 
+topics:
+  versions:
+    - - ${task.process}:
+          type: string
+          description: The name of the process
+      - bbmap:
+          type: string
+          description: The name of the tool
+      - bbmap --version:
+          type: eval
+          description: The expression to obtain the version of the tool
 authors:
   - "@snunzi"
 maintainers:
