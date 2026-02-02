@@ -2,6 +2,7 @@
 LONGREAD_PREPROCESSING: Preprocessing and QC for long reads
 */
 
+include { SEQKIT_RMDUP                     } from '../../../modules/nf-core/seqkit/rmdup/main'
 include { PORECHOP_PORECHOP                } from '../../../modules/nf-core/porechop/porechop/main'
 include { PORECHOP_ABI                     } from '../../../modules/nf-core/porechop/abi/main'
 include { NANOQ as NANOQ_RAW               } from '../../../modules/nf-core/nanoq'
@@ -33,6 +34,13 @@ workflow LONGREAD_PREPROCESSING {
             return tuple(meta, count)
         }
 
+    // Remove duplicate reads
+    SEQKIT_RMDUP(
+        ch_samplesheet,
+    )
+    ch_versions = ch_versions.mix(SEQKIT_RMDUP.out.versions)
+    ch_long_reads = SEQKIT_RMDUP.out.fastx
+
     // Adapter trimming with porechop or porechop_abi
     if (params.adaptertrimming_tool == 'porechop_abi') {
         PORECHOP_ABI(
@@ -45,12 +53,13 @@ workflow LONGREAD_PREPROCESSING {
     }
     else if (params.adaptertrimming_tool == 'porechop') {
         PORECHOP_PORECHOP(
-            ch_samplesheet,
+            ch_long_reads,
         )
         ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions)
         ch_long_reads = PORECHOP_PORECHOP.out.reads
         ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_PORECHOP.out.log)
     }
+
 
     // Filter reads by quality and length
     CHOPPER(
@@ -59,15 +68,18 @@ workflow LONGREAD_PREPROCESSING {
     )
     ch_versions = ch_versions.mix(CHOPPER.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_PORECHOP.out.log)
+    ch_long_reads = CHOPPER.out.fastq
 
+
+/*
     //Orient direction of reads based on reference database
     VSEARCH_ORIENT (
         CHOPPER.out.fastq,
         ch_reference
     )
     ch_versions = ch_versions.mix(VSEARCH_ORIENT.out.versions)
-    ch_long_reads = VSEARCH_ORIENT.out.reads
-
+    ch_long_reads = VSEARCH_ORIENT.out.reads.view()
+*/
     // QC of filtered reads
     NANOQ_FILTERED(
         ch_long_reads
