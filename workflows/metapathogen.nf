@@ -51,6 +51,7 @@ workflow METAPATHOGEN {
     // Preprocessing reads
     LONGREAD_PREPROCESSING(
         ch_samplesheet,
+        ch_reference
     )
     ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(LONGREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
