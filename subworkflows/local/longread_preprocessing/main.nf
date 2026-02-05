@@ -33,7 +33,7 @@ workflow LONGREAD_PREPROCESSING {
         .map { meta, files ->
             def count = files[0].countFastq()
             return tuple(meta, count)
-        }.view()
+        }
 
     // Remove duplicate reads
     SEQKIT_RMDUP(
@@ -82,7 +82,7 @@ workflow LONGREAD_PREPROCESSING {
         VSEARCH_ORIENT.out.reads,
     )
     ch_versions = ch_versions.mix(BBMAP_REFORMAT.out.versions)
-    ch_long_reads = BBMAP_REFORMAT.out.reads.view()
+    ch_long_reads = BBMAP_REFORMAT.out.reads
 
     // QC of filtered reads
     NANOQ_FILTERED(

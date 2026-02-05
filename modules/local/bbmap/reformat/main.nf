@@ -12,7 +12,7 @@ process BBMAP_REFORMAT {
     tuple val(meta), path(reads)
 
     output:
-    tuple val(meta), path("*_rename.fastq.gz")                , emit: reads
+    tuple val(meta), path("*_clean.fastq.gz")                 , emit: reads
     tuple val(meta), path('*.log')                            , emit: log
     path "versions.yml"                                       , emit: versions
 
@@ -25,7 +25,7 @@ process BBMAP_REFORMAT {
     """
     reformat.sh \\
         in=$reads \\
-        out=${prefix}_rename.fastq.gz\\
+        out=${prefix}_clean.fastq.gz\\
         trd=t \\
         &> ${prefix}.seal.log
 
@@ -38,8 +38,8 @@ process BBMAP_REFORMAT {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}_rename.fastq
-    gzip ${prefix}.fastq
+    touch ${prefix}_clean.fastq
+    gzip ${prefix}_clean.fastq
     touch ${prefix}.log
 
     cat <<-END_VERSIONS > versions.yml

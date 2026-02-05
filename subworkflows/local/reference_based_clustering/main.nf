@@ -5,7 +5,7 @@ include { BBMAP_SEAL      }     from '../../../modules/local/bbmap/seal/main'
 include { FILTLONG        }     from '../../../modules/nf-core/filtlong/main'
 include { SPOA            }     from '../../../modules/local/spoa/main'
 include { ISONCLUST       }     from '../../../modules/local/isonclust/main'
-include { CDHIT_CDHITEST  }     from '../../../modules/nf-core/cdhit/cdhitest/main'
+include { VSEARCH_CLUSTER }     from '../../../modules/nf-core/vsearch/cluster/main'
 include { CONCAT_FILES    }     from '../../../modules/local/concat_files/main'
 include { MINIMAP2_ALIGN  }     from '../../../modules/nf-core/minimap2/align/main'
 include { RACON           }     from '../../../modules/nf-core/racon/main'
@@ -142,16 +142,16 @@ workflow REFERENCE_BASED_CLUSTERING {
     ch_mapped_reads = CONCAT_FILES.out.fasta
 
 
-    CDHIT_CDHITEST (
+    VSEARCH_CLUSTER (
         ch_mapped_reads
     )
-    ch_versions = ch_versions.mix(CDHIT_CDHITEST.out.versions.first())
+    ch_versions = ch_versions.mix(VSEARCH_CLUSTER.out.versions.first())
     //ch_mapped_reads = CDHIT_CDHITEST.out.fasta
 
-    ch_consensus = CDHIT_CDHITEST.out.fasta.map { _meta, file ->
+    ch_consensus = VSEARCH_CLUSTER.out.centroids.map { _meta, file ->
         def consensus = file.splitFasta( record: [id: true, sequence: false])
         ( consensus.id )
-        }.flatten()
+        }.flatten().view()
 
     ch_mapped_reads_flattened_final = ch_mapped_reads_flattened.map { meta, consensus, _reads, _ref, _paf, _racon -> 
         tuple(meta.id+'_'+meta.cluster, meta, consensus)}
