@@ -9,37 +9,41 @@ keywords:
   - trimming
 components:
   - nanoq
-  - porechop/porechip
+  - porechop/porechop
   - porechop/abi
   - chopper
   - vsearch/orient
+  - seqkit/rmdup
+  - vsearch/orient
+  - bbmap/reformat
 input:
-  - ch_bam:
+  - ch_samplesheet:
       type: file
       description: |
-        The input channel containing the BAM/CRAM/SAM files
-        Structure: [ val(meta), path(bam) ]
-      pattern: "*.{bam/cram/sam}"
-## TODO nf-core: List all of the channels used as output with a descriptions and their structure
+        Input fastq files for processing
+        Structure: [ val(meta), path(fastq) ]
+      pattern: "*.{fastq.gz}"
+  - ch_reference:
+      type: file
+      description: | 
+        Sequence database for read orientation
+
 output:
-  - bam:
+  - long_reads:
+      description: |
+        Quality-controlled and preprocessed long reads
+        Structure: [ val(meta), path(fastq) ]
+      pattern: "*.fastq.gz"
+  - read_counts:
+      description: |
+        Channel containing read counts
+        Structure: [ val(meta), val(count_raw), val(count_filtered) ]
+  - multiqc_files:
       type: file
       description: |
-        Channel containing BAM files
-        Structure: [ val(meta), path(bam) ]
-      pattern: "*.bam"
-  - bai:
-      type: file
-      description: |
-        Channel containing indexed BAM (BAI) files
-        Structure: [ val(meta), path(bai) ]
-      pattern: "*.bai"
-  - csi:
-      type: file
-      description: |
-        Channel containing CSI files
-        Structure: [ val(meta), path(csi) ]
-      pattern: "*.csi"
+        multiqc files for statistics
+        Structure: [ val(meta), path(*) ]
+      pattern: "*"
   - versions:
       type: file
       description: |

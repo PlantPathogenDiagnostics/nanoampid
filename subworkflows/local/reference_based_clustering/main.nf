@@ -93,8 +93,6 @@ workflow REFERENCE_BASED_CLUSTERING {
     )
     ch_versions = ch_versions.mix(MINIMAP2_ALIGN.out.versions.first())
 
-
-
     // Only continue with clusters that have aligned sequences
     MINIMAP2_ALIGN.out.paf
         .filter{ _meta, paf -> paf.countLines() > 0 }
@@ -141,17 +139,16 @@ workflow REFERENCE_BASED_CLUSTERING {
     ch_versions = ch_versions.mix(CONCAT_FILES.out.versions.first())
     ch_mapped_reads = CONCAT_FILES.out.fasta
 
-
+// Cluster consensus seqs and remove identical
     VSEARCH_CLUSTER (
         ch_mapped_reads
     )
     ch_versions = ch_versions.mix(VSEARCH_CLUSTER.out.versions.first())
-    //ch_mapped_reads = CDHIT_CDHITEST.out.fasta
 
     ch_consensus = VSEARCH_CLUSTER.out.centroids.map { _meta, file ->
         def consensus = file.splitFasta( record: [id: true, sequence: false])
         ( consensus.id )
-        }.flatten().view()
+        }.flatten()
 
     ch_mapped_reads_flattened_final = ch_mapped_reads_flattened.map { meta, consensus, _reads, _ref, _paf, _racon -> 
         tuple(meta.id+'_'+meta.cluster, meta, consensus)}

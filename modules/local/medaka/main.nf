@@ -11,7 +11,7 @@ process MEDAKA {
     tuple val(meta), path(reads), path(assembly)
 
     output:
-    tuple val(meta), path("*_medaka.fa"), emit: assembly
+    tuple val(meta), path("*_medaka.fa")   , emit: assembly
     path "versions.yml"                    , emit: versions
 
     when:
@@ -31,6 +31,21 @@ process MEDAKA {
         -o ./
 
     mv consensus.fasta ${prefix}_medaka.fa
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        medaka: \$( medaka --version 2>&1 | sed 's/medaka //g' )
+    END_VERSIONS
+    """
+
+    stub:
+    def args = task.ext.args ?: ''
+    def prefix   = task.ext.prefix ?: "${meta.id}"
+
+    """
+    echo $args
+    
+    touch ${prefix}_medaka.fa
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -14,8 +14,8 @@ include { VSEARCH_ORIENT                   } from '../../../modules/local/vsearc
 
 workflow LONGREAD_PREPROCESSING {
     take:
-    ch_samplesheet // [ [meta] , fastq] (mandatory)
-    ch_reference //
+    ch_samplesheet // [ [meta] , fastq ] (mandatory)
+    ch_reference   // [ path(reference_fasta) ] (mandatory)
 
     main:
     ch_versions = Channel.empty()
@@ -68,7 +68,6 @@ workflow LONGREAD_PREPROCESSING {
         []
     )
     ch_versions = ch_versions.mix(CHOPPER.out.versions)
-    ch_multiqc_files = ch_multiqc_files.mix(PORECHOP_PORECHOP.out.log)
     ch_long_reads = CHOPPER.out.fastq
 
     //Orient Reads with database
@@ -99,8 +98,6 @@ workflow LONGREAD_PREPROCESSING {
         meta.filtered=filtered
         return tuple(meta)
     }
-
-
 
     emit:
     long_reads    = ch_long_reads

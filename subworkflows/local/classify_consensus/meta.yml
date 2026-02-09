@@ -1,44 +1,35 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: "classify_consensus"
-## TODO nf-core: Add a description of the subworkflow and list keywords
-description: Sort SAM/BAM/CRAM file
+description: BLAST sequences against a reference database and filter hits for reference genome selection
 keywords:
-  - sort
-  - bam
-  - sam
-  - cram
-## TODO nf-core: Add a list of the modules and/or subworkflows used in the subworkflow
+  - blast
+  - reference selection
+  - filtering
+  - alignment
+  - sequence similarity
 components:
-  - samtools/sort
-  - samtools/index
-## TODO nf-core: List all of the channels used as input with a description and their structure
+  - blast/blastn
+  - blastnfilter
 input:
-  - ch_bam:
-      type: file
+  - ch_consensus:
       description: |
-        The input channel containing the BAM/CRAM/SAM files
-        Structure: [ val(meta), path(bam) ]
-      pattern: "*.{bam/cram/sam}"
-## TODO nf-core: List all of the channels used as output with a descriptions and their structure
+        Consensus sequences for clusters of reads
+        Structure: [ val(meta), path(fasta) ]
+      pattern: "*.fasta"
+  - ch_blast_refdb:
+      description: |
+        BLAST database for sequence comparison
+        Structure: [ val(meta), path(fasta) ]
+  - ch_read_counts:
+      description: |
+        Channel containing read counts
+        Structure: [ val(meta), val(count_raw), val(count_filtered) ]
+
 output:
-  - bam:
-      type: file
+  - no_blast_hits:
       description: |
-        Channel containing BAM files
-        Structure: [ val(meta), path(bam) ]
-      pattern: "*.bam"
-  - bai:
-      type: file
-      description: |
-        Channel containing indexed BAM (BAI) files
-        Structure: [ val(meta), path(bai) ]
-      pattern: "*.bai"
-  - csi:
-      type: file
-      description: |
-        Channel containing CSI files
-        Structure: [ val(meta), path(csi) ]
-      pattern: "*.csi"
+        Channel containing sample with no blast hits
+        Structure: [ val(meta), mqc ]
   - versions:
       type: file
       description: |

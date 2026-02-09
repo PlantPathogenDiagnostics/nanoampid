@@ -63,7 +63,6 @@ workflow CLASSIFY_CONSENSUS {
         ch_read_counts
     )
 
-
     emit:
     no_blast_hits     = ch_no_blast_hits_mqc      // channel: [ val(meta), [ mqc ] ]
     versions = ch_versions                     // channel: [ versions.yml ]

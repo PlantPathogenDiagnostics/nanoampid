@@ -14,8 +14,8 @@ process VSEARCH_ORIENT {
     path reference
 
     output:
-    tuple val(meta), path("*.fastq.gz") , emit: reads
-    path "versions.yml"              , emit: versions
+    tuple val(meta), path("*.fastq.gz")  , emit: reads
+    path "versions.yml"                  , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -48,6 +48,7 @@ process VSEARCH_ORIENT {
     echo $args
     
     touch ${prefix}.fastq
+    gzip ${prefix}.fastq
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
