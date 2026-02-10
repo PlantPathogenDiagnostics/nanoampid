@@ -20,29 +20,37 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 ### Quality Control
 
+These steps trim away the adapter sequences present in input reads, trims away bad quality bases and discards reads that are too short or too long. It also ensures reads are not duplicated and truncates read headers to comply with downstream program requirements.
+
 <details markdown="1">
 <summary>Output files</summary>
 
-- `fastqc/`
-  - `*_fastqc.html`: FastQC report containing quality metrics.
-  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+- `nanoq/`
+  - `*_raw.stats`: Nanoq report containing quality metrics of raw reads.
+  - `*_filtered.stats`: Nanoq report containing quality metrics of quality filtered reads.
 
 </details>
 
-[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+[nanoq](https://github.com/esteinig/nanoq) gives general quality metrics about your sequenced reads. 
 
 ### Read Clustering
 
+These steps cluster reads using a reference based approach, and a secondary reference-free approach.
+
+## Assembly
+
+Read clusters are assembled in consensus sequences and polished for accuracy. 
+
 <details markdown="1">
 <summary>Output files</summary>
 
-- `fastqc/`
-  - `*_fastqc.html`: FastQC report containing quality metrics.
-  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
+- `consensus_sequences/`
+  - `*_raw.stats`: Nanoq report containing quality metrics of raw reads.
+  - `*_filtered.stats`: Nanoq report containing quality metrics of quality filtered reads.
 
 </details>
 
-[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+[nanoq](https://github.com/esteinig/nanoq) gives general quality metrics about your sequenced reads.
 
 ### MultiQC
 
