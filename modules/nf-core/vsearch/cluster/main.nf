@@ -19,7 +19,7 @@ process VSEARCH_CLUSTER {
     tuple val(meta), path('*.out.tsv.gz')            , optional: true, emit: out
     tuple val(meta), path('*.blast.tsv.gz')          , optional: true, emit: blast
     tuple val(meta), path('*.uc.tsv.gz')             , optional: true, emit: uc
-    tuple val(meta), path('*.centroids.fasta.gz')    , optional: true, emit: centroids
+    tuple val(meta), path('*.fasta.gz')              , optional: true, emit: centroids
     tuple val(meta), path('*.clusters.fasta*.gz')    , optional: true, emit: clusters
     tuple val(meta), path('*.profile.txt.gz')        , optional: true, emit: profile
     tuple val(meta), path('*.msa.fasta.gz')          , optional: true, emit: msa
@@ -40,7 +40,7 @@ process VSEARCH_CLUSTER {
     def out_ext = args3.contains("--alnout") ? "aln" :
                     args3.contains("--biomout") ? "biom" :
                     args3.contains("--blast6out") ? "blast.tsv" :
-                    args3.contains("--centroids") ? "centroids.fasta" :
+                    args3.contains("--centroids") ? "fasta" :
                     args3.contains("--clusters") ? "clusters.fasta" :
                     args3.contains("--mothur_shared_out") ? "mothur.tsv" :
                     args3.contains("--msaout") ? "msa.fasta" :
@@ -86,7 +86,7 @@ process VSEARCH_CLUSTER {
     def out_ext = args3.contains("--alnout") ? "aln.gz" :
                     args3.contains("--biomout") ? "biom.gz" :
                     args3.contains("--blast6out") ? "blast.tsv.gz" :
-                    args3.contains("--centroids") ? "centroids.fasta.gz" :
+                    args3.contains("--centroids") ? "fasta.gz" :
                     args3.contains("--clusters") ? "clusters.fasta.gz" :
                     args3.contains("--mothur_shared_out") ? "mothur.tsv.gz" :
                     args3.contains("--msaout") ? "msa.fasta.gz" :
