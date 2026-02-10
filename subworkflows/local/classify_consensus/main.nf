@@ -43,7 +43,6 @@ workflow CLASSIFY_CONSENSUS {
     ch_consensus = ch_consensus
         .collectFile(
             name: 'blast_results.csv',
-            storeDir: 'blast',
             newLine: true
         ) { meta, consensus, blast ->
             "${meta.id},${meta.cluster},${meta.read_count},${consensus},${blast}"
@@ -52,7 +51,6 @@ workflow CLASSIFY_CONSENSUS {
     ch_read_counts = ch_read_counts
         .collectFile(
             name: 'read_count_results.csv',
-            storeDir: 'blast',
             newLine: true
         ) { meta ->
             "${meta.id},${meta.raw},${meta.filtered}"
