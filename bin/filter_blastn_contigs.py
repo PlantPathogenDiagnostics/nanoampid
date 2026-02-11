@@ -87,7 +87,7 @@ for r in all_results.itertuples(index=False):
         next(fh) 
         new_data['Sequence'] = next(fh) 
     new_data[['Barcode','Cluster','Read Count']] = r[:3]
-    new_data['qseqid'] = new_data['Barcode']+'_'+new_data['Cluster']
+    new_data['qseqid'] = new_data['Barcode'].astype(str)+'_'+new_data['Cluster'].astype(str)
     summary_consensus.append(new_data)
 
 combined_df = pd.concat(summary_consensus, ignore_index=True)
