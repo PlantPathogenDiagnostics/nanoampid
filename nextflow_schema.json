@@ -55,12 +55,12 @@
                 "min_pident": {
                     "type": "number",
                     "description": "Minimum percent identity to the reference.",
-                    "default": 95
+                    "default": 90
                 },
                 "min_ref_cov": {
                     "type": "number",
                     "description": "Minimum percent coverage to the reference.",
-                    "default": 90
+                    "default": 50
                 },
                 "max_con_len": {
                     "type": "number",

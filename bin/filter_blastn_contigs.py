@@ -43,7 +43,6 @@ parser.add_argument(
     metavar="alignment",
     type=float,
     help="percentage of query alignment length cutoff",
-    default=50,
 )
 
 parser.add_argument(
@@ -52,7 +51,6 @@ parser.add_argument(
     metavar="identity",
     type=float,
     help="percentage identity to reference cutoff",
-    default=95,
 )
 
 parser.add_argument(
@@ -61,7 +59,6 @@ parser.add_argument(
     metavar="mismatch",
     type=float,
     help="maximum number of nucleotide mismatches with the reference",
-    default=11,
 )
 
 parser.add_argument(
@@ -70,7 +67,6 @@ parser.add_argument(
     metavar="conlength",
     type=float,
     help="maximum length of the consensus length cutoff",
-    default=1000,
 )
 args = parser.parse_args()
 
