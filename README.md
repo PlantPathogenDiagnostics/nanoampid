@@ -65,6 +65,9 @@ nextflow run PlantPathogenDiagnostics/metapathogen \
    --reference <fasta of ref sequences>
 ```
 
+For more details about pipeline useage see [useage documentation](/docs/usage.md), for details on the output files and reports, please refer to the
+[output documentation](/docs/output.md).
+
 > [!WARNING]
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
 
