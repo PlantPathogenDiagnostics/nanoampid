@@ -59,7 +59,27 @@ This is the primary output of the pipeline, containing the report meant to be un
 - `summary_output/`
   - `*.xlsx`: The primary outputput report of the pipeline.
 
+Primary output tables include:
+
+Column | Description 
+--- | ---
+Barcode | Barcode name as assigned from the directory name in the data folder.
+Cluster_Name | Reference sequence reads were clustered with.
+Number Reads | Number of reads used to create consensus.
+Ref_Sequence | Name of blast hit from the reference database. 
+pident | Percentage of identical matches between reference and consensus.
+Alignment_Length | Length of alignment.
+Acc_Length | Length of reference.
+mismatch | Number of mismatches.
+gapopen | Number of gap openings.
+evalue | Expect value.
+bitscore | Bit score.
+%_Ref_Cov | Percent of reference covered, as calculated by Alignment_length/Acc_Length*100.
+Sequence | Nucleotide sequence of the consensus.
+
 </details>
+
+
 
 ## MultiQC
 

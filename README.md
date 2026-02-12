@@ -34,7 +34,7 @@
    2. Align reads within clusters ([`minimap2`](https://github.com/lh3/minimap2))
    3. Build consensus resuence ([`racon`](https://github.com/isovic/racon))
    4. Polish consensus sequence ([`medaka`](https://github.com/nanoporetech/medaka))
-   5. Remove redundant sequences ([`vsearch-cluster``](https://github.com/torognes/vsearch))
+   5. Remove redundant sequences ([`vsearch-cluster`](https://github.com/torognes/vsearch))
 4.	Taxonomic assignment
 	1. Taxonomic classification ([`BLASTn`](https://blast.ncbi.nlm.nih.gov/Blast.cgi))
 5.	Summary consensus sequences and assignments in excel workbook (python script)
