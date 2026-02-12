@@ -1,7 +1,7 @@
 # PlantPathogenDiagnostics/metapathogen
 
 [![GitHub Actions CI Status](https://github.com/PlantPathogenDiagnostics/metapathogen/actions/workflows/nf-test.yml/badge.svg)](https://github.com/PlantPathogenDiagnostics/metapathogen/actions/workflows/nf-test.yml)
-[![GitHub Actions Linting Status](https://github.com/PlantPathogenDiagnostics/metapathogen/actions/workflows/linting.yml/badge.svg)](https://github.com/PlantPathogenDiagnostics/metapathogen/actions/workflows/linting.yml)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![GitHub Actions Linting Status](https://github.com/PlantPathogenDiagnostics/metapathogen/actions/workflows/linting.yml/badge.svg)](https://github.com/PlantPathogenDiagnostics/metapathogen/actions/workflows/linting.yml)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A524.10.5-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
@@ -57,7 +57,7 @@ CONTROL_REP1,sample1.fastq.gz
 
 Each row represents a fastq file.
 
-You must also supply a reference fasta database of amplicon sequences of potential taxa.
+You must also supply a reference fasta database of gene sequences.
 
 Now, you can run the pipeline using:
 
@@ -77,7 +77,7 @@ nextflow run PlantPathogenDiagnostics/metapathogen \
 ```
 Typical pipeline command:
 
-  nextflow run PlantPathogenDiagnostics/metapathogen -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>
+  nextflow run PlantPathogenDiagnostics/metapathogen -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR> --reference <fasta of ref sequences>
 
 --skip_qc                       [boolean]
 --show_hidden                   [boolean]         Show all hidden parameters in the help message. This needs to be used in combination with `--help` or `--help_full`.
