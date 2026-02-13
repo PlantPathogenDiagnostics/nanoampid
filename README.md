@@ -58,7 +58,7 @@ First, prepare a samplesheet with your input data that looks as follows:
 
 ```csv
 sample,fastq_1
-CONTROL_REP1,sample1.fastq.gz
+CONTROL_REP1,/path/to/sample1.fastq.gz
 ```
 
 Each row represents a fastq file.
