@@ -1,17 +1,17 @@
-# PlantPathogenDiagnostics/metapathogen
+# PlantPathogenDiagnostics/nanoampid
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A524.10.5-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
 [![nf-core template version](https://img.shields.io/badge/nf--core_template-3.3.2-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.3.2)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/PlantPathogenDiagnostics/metapathogen)
+[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/PlantPathogenDiagnostics/nanoampid)
 
 ## Introduction
 
-**PlantPathogenDiagnostics/metapathogen** is a bioinformatics pipeline that generates consensus sequences with classification from amplicon data. It takes a samplesheet with FASTQ files from NanoPore sequencing as input performs quality control (QC), read clustering, consensus sequence generation, blast alignment, and produces a reference assignment and QC report.
+**PlantPathogenDiagnostics/nanoampid** is a bioinformatics pipeline that generates consensus sequences with classification from amplicon data. It takes a samplesheet with FASTQ files from NanoPore sequencing as input performs quality control (QC), read clustering, consensus sequence generation, blast alignment, and produces a reference assignment and QC report.
 
-![metapathogen-workflow](docs/images/metapathogen_metromap_v1.png)
+![nanoampid-workflow](docs/images/nanoampid_metromap_v1.png)
 
 1. Read preprocessing
    1. Read quality assessment
@@ -58,7 +58,7 @@ You must also supply a reference fasta database of gene sequences.
 Now, you can run the pipeline using:
 
 ```bash
-nextflow run PlantPathogenDiagnostics/metapathogen \
+nextflow run PlantPathogenDiagnostics/nanoampid \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
    --outdir <OUTDIR> \
@@ -76,7 +76,7 @@ For more details about pipeline useage see [useage documentation](/docs/usage.md
 ```
 Typical pipeline command:
 
-  nextflow run PlantPathogenDiagnostics/metapathogen -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR> --reference <fasta of ref sequences>
+  nextflow run PlantPathogenDiagnostics/nanoampid -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR> --reference <fasta of ref sequences>
 
 --skip_qc                       [boolean]
 --show_hidden                   [boolean]         Show all hidden parameters in the help message. This needs to be used in combination with `--help` or `--help_full`.
@@ -112,7 +112,7 @@ Generic options
 
 ## Credits
 
-PlantPathogenDiagnostics/metapathogen was originally written by Schyler O. Nunziata.
+PlantPathogenDiagnostics/nanoampid was originally written by Schyler O. Nunziata.
 
 We thank the following people for their extensive assistance in the development of this pipeline: Subodh K. Srivastava, Vanina Castroagudin, Eric Newberry, Yazmin Rivera, and Gloria Abad
 

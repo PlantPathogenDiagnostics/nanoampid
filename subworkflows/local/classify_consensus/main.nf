@@ -4,7 +4,7 @@ CLASSIFY_CONSENSUS: Classifies contigs using blastn against a reference database
 
 
 include { BLAST_BLASTN          }      from '../../../modules/nf-core/blast/blastn/main'
-include { noBlastHitsToMultiQC  }      from '../utils_nfcore_metapathogen_pipeline'
+include { noBlastHitsToMultiQC  }      from '../utils_nfcore_nanoampid_pipeline'
 include { BLASTNFILTER          }      from '../../../modules/local/blastnfilter/main'
 
 workflow CLASSIFY_CONSENSUS {

@@ -1,4 +1,4 @@
-# PlantPathogenDiagnostics/metapathogen: Output
+# PlantPathogenDiagnostics/nanoampid: Output
 
 ## Introduction
 

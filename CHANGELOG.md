@@ -1,11 +1,11 @@
-# PlantPathogenDiagnostics/metapathogen: Changelog
+# PlantPathogenDiagnostics/nanoampid: Changelog
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## v0.1.0 - [date]
 
-Initial release of PlantPathogenDiagnostics/metapathogen, created with the [nf-core](https://nf-co.re/) template.
+Initial release of PlantPathogenDiagnostics/nanoampid, created with the [nf-core](https://nf-co.re/) template.
 
 ### `Added`
 

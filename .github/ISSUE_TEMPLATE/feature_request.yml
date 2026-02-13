@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an idea for the PlantPathogenDiagnostics/metapathogen pipeline
+description: Suggest an idea for the PlantPathogenDiagnostics/nanoampid pipeline
 labels: enhancement
 body:
   - type: textarea

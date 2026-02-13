@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/PlantPathogenDiagnostics/metapathogen/master/nextflow_schema.json",
-    "title": "PlantPathogenDiagnostics/metapathogen pipeline parameters",
+    "$id": "https://raw.githubusercontent.com/PlantPathogenDiagnostics/nanoampid/master/nextflow_schema.json",
+    "title": "PlantPathogenDiagnostics/nanoampid pipeline parameters",
     "description": "Bioinformatic pipeline for taxonomic assignment of amplicon seqeuncing from Nanopore reads",
     "type": "object",
     "$defs": {

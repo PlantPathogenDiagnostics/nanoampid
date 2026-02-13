@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/PlantPathogenDiagnostics/metapathogen/master/assets/schema_input.json",
-    "title": "PlantPathogenDiagnostics/metapathogen pipeline - params.input schema",
+    "$id": "https://raw.githubusercontent.com/PlantPathogenDiagnostics/nanoampid/master/assets/schema_input.json",
+    "title": "PlantPathogenDiagnostics/nanoampid pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
     "type": "array",
     "items": {

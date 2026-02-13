@@ -1,6 +1,6 @@
 {
-    "name": "PlantPathogenDiagnostics/metapathogen",
-    "homePage": "https://github.com/PlantPathogenDiagnostics/metapathogen",
+    "name": "PlantPathogenDiagnostics/nanoampid",
+    "homePage": "https://github.com/PlantPathogenDiagnostics/nanoampid",
     "repos": {
         "https://github.com/nf-core/modules.git": {
             "modules": {

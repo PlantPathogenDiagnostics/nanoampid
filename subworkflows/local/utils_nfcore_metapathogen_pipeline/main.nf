@@ -1,5 +1,5 @@
 //
-// Subworkflow with functionality specific to the PlantPathogenDiagnostics/metapathogen pipeline
+// Subworkflow with functionality specific to the PlantPathogenDiagnostics/nanoampid pipeline
 //
 
 /*

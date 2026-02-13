@@ -1,4 +1,4 @@
-# PlantPathogenDiagnostics/metapathogen: Usage
+# PlantPathogenDiagnostics/nanoampid: Usage
 
 > _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
 
@@ -52,7 +52,7 @@ An [example samplesheet](../assets/samplesheet.csv) has been provided with the p
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run PlantPathogenDiagnostics/metapathogen --input ./samplesheet.csv --outdir ./results --reference /path/to/ref_db.fasta -profile docker
+nextflow run PlantPathogenDiagnostics/nanoampid --input ./samplesheet.csv --outdir ./results --reference /path/to/ref_db.fasta -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -76,7 +76,7 @@ Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <
 The above pipeline run specified with a params file in yaml format:
 
 ```bash
-nextflow run PlantPathogenDiagnostics/metapathogen -profile docker -params-file params.yaml
+nextflow run PlantPathogenDiagnostics/nanoampid -profile docker -params-file params.yaml
 ```
 
 with:
@@ -94,7 +94,7 @@ You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-c
 
 It is a good idea to specify the pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [PlantPathogenDiagnostics/metapathogen releases page](https://github.com/PlantPathogenDiagnostics/metapathogen/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
+First, go to the [PlantPathogenDiagnostics/nanoampid releases page](https://github.com/PlantPathogenDiagnostics/nanoampid/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future. For example, at the bottom of the MultiQC reports.
 

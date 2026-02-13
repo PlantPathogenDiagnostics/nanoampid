@@ -17,7 +17,7 @@
                         "size": "Large",
                         "weight": "Bolder",
                         "color": "<% if (success) { %>Good<% } else { %>Attention<%} %>",
-                        "text": "PlantPathogenDiagnostics/metapathogen v${version} - ${runName}",
+                        "text": "PlantPathogenDiagnostics/nanoampid v${version} - ${runName}",
                         "wrap": true
                     },
                     {

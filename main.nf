@@ -1,9 +1,9 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    PlantPathogenDiagnostics/metapathogen
+    PlantPathogenDiagnostics/nanoampid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/PlantPathogenDiagnostics/metapathogen
+    Github : https://github.com/PlantPathogenDiagnostics/nanoampid
 ----------------------------------------------------------------------------------------
 */
 
@@ -13,10 +13,10 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { METAPATHOGEN            } from './workflows/metapathogen'
-include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_metapathogen_pipeline'
-include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_metapathogen_pipeline'
-include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_metapathogen_pipeline'
+include { NANOAMPID            } from './workflows/nanoampid'
+include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_nanoampid_pipeline'
+include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_nanoampid_pipeline'
+include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_nanoampid_pipeline'
 
 
 /*
@@ -28,7 +28,7 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_meta
 //
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
-workflow PLANTPATHOGENDIAGNOSTICS_METAPATHOGEN {
+workflow PLANTPATHOGENDIAGNOSTICS_NANOAMPID {
 
     take:
     samplesheet // channel: samplesheet read in from --input
@@ -38,11 +38,11 @@ workflow PLANTPATHOGENDIAGNOSTICS_METAPATHOGEN {
     //
     // WORKFLOW: Run pipeline
     //
-    METAPATHOGEN (
+    NANOAMPID (
         samplesheet
     )
     emit:
-    multiqc_report = METAPATHOGEN.out.multiqc_report // channel: /path/to/multiqc_report.html
+    multiqc_report = NANOAMPID.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -68,7 +68,7 @@ workflow {
     //
     // WORKFLOW: Run main workflow
     //
-    PLANTPATHOGENDIAGNOSTICS_METAPATHOGEN (
+    PLANTPATHOGENDIAGNOSTICS_NANOAMPID (
         PIPELINE_INITIALISATION.out.samplesheet
     )
     //
@@ -81,7 +81,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        PLANTPATHOGENDIAGNOSTICS_METAPATHOGEN.out.multiqc_report
+        PLANTPATHOGENDIAGNOSTICS_NANOAMPID.out.multiqc_report
     )
 }
 
