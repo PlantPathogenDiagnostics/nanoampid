@@ -9,7 +9,7 @@
 
 ## Introduction
 
-Nanopore amplification identification (**nanoampid**) is a bioinformatics pipeline that generates consensus sequences with classification from NanoPore amplicon sequencing data. It takes a samplesheet with FASTQ files from NanoPore sequencing as input performs quality control (QC), read clustering, consensus sequence generation, blast alignment, and produces a reference assignment and QC report.
+**Nanopore amplification identification (nanoampid)** is a bioinformatics pipeline that generates consensus sequences with classification from NanoPore amplicon sequencing data. It takes a samplesheet with FASTQ files from NanoPore sequencing as input performs quality control (QC), read clustering, consensus sequence generation, blast alignment, and produces a reference assignment and QC report.
 
 ![nanoampid-workflow](docs/images/nanoampid_metromap_v1.png)
 
