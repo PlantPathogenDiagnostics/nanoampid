@@ -34,7 +34,7 @@ lint:
 template:
   org: PlantPathogenDiagnostics
   name: nanoampid
-  description: Bioinformatic pipeline for taxonomic assignment of amplicon seqeuncing
+  description: Bioinformatic pipeline for taxonomic assignment of amplicon sequencing
     from Nanopore reads
   author: Schyler O. Nunziata
   version: 0.1.0

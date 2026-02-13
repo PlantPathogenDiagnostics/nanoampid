@@ -35,7 +35,7 @@ These steps trim away the adapter sequences present in input reads, trims away b
 
 ## Read Clustering
 
-These steps cluster reads using a reference based approach, and a secondary reference-free approach. No direct output files are retained, but used for assembly into consensus seqeunces. 
+These steps cluster reads using a reference based approach, and a secondary reference-free approach. No direct output files are retained, but used for assembly into consensus sequences. 
 
 ## Assembly
 
