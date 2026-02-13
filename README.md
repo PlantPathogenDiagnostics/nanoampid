@@ -1,4 +1,4 @@
-# PlantPathogenDiagnostics/nanoampid
+# nanoampid
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A524.10.5-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
 [![nf-core template version](https://img.shields.io/badge/nf--core_template-3.3.2-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.3.2)
@@ -68,7 +68,7 @@ You must also supply a reference fasta database of gene sequences.
 Now, you can run the pipeline using:
 
 ```bash
-nextflow run PlantPathogenDiagnostics/nanoampid \
+nextflow run nanoampid \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
    --outdir <OUTDIR> \
@@ -86,7 +86,7 @@ For more details about pipeline useage see [useage documentation](/docs/usage.md
 ```
 Typical pipeline command:
 
-  nextflow run PlantPathogenDiagnostics/nanoampid -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR> --reference <fasta of ref sequences>
+  nextflow run nanoampid -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR> --reference <fasta of ref sequences>
 
 --skip_qc                       [boolean]
 --show_hidden                   [boolean]         Show all hidden parameters in the help message. This needs to be used in combination with `--help` or `--help_full`.
