@@ -15,11 +15,13 @@ include { createFileChannel             } from '../subworkflows/local/utils_nfco
 // Preprocessing
 include { LONGREAD_PREPROCESSING        } from '../subworkflows/local/longread_preprocessing/main'
 
+// Create database
+include { CREATE_DATABASE               } from '../subworkflows/local/create_database/main'
+
 // Reference-based clustering and consensus generation
 include { REFERENCE_BASED_CLUSTERING    } from '../subworkflows/local/reference_based_clustering/main'
 
 // Consensus classification
-include { BLAST_MAKEBLASTDB             } from '../modules/nf-core/blast/makeblastdb/main'
 include { CLASSIFY_CONSENSUS            } from '../subworkflows/local/classify_consensus/main'
 
 /*
@@ -69,15 +71,14 @@ workflow NANOAMPID {
 
     // Create BLAST database from reference sequences
     ch_reference_with_meta = ch_reference.map {
-        item -> [['id': "id-fasta-for-makeblastdb"], item]
+        item -> [['id': "fasta-for-makeblastdb"], item]
         }
 
-
-    BLAST_MAKEBLASTDB (
+    CREATE_DATABASE (
         ch_reference_with_meta
      )
-     ch_versions = ch_versions.mix(BLAST_MAKEBLASTDB.out.versions)
-     ch_blast_refdb = BLAST_MAKEBLASTDB.out.db.collect{it[1]}.ifEmpty([]).map{it -> [[id: 'reference'], it]}
+     ch_versions = ch_versions.mix(CREATE_DATABASE.out.versions)
+     ch_blast_refdb = CREATE_DATABASE.out.blast_refdb.collect{it[1]}.ifEmpty([]).map{it -> [[id: 'reference'], it]}
 
     // Classify consensus sequences
     CLASSIFY_CONSENSUS (
