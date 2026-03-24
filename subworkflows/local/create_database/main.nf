@@ -17,10 +17,10 @@ workflow CREATE_DATABASE {
      )
 
     ch_versions = ch_versions.mix(FORMAT_DATABASE.out.versions.first())
-    ch_reference_with_meta = FORMAT_DATABASE.out.fasta
+    ch_reference_formatted = FORMAT_DATABASE.out.fasta
 
     BLAST_MAKEBLASTDB (
-        ch_reference_with_meta
+        ch_reference_formatted
      )
 
      ch_versions = ch_versions.mix(BLAST_MAKEBLASTDB.out.versions)

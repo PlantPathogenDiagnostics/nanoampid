@@ -23,6 +23,7 @@ process FORMAT_DATABASE {
     # Rename headers by filename
     
     sed  '/^>/s/\\W/_/2g' ${input_file} > formatted_${input_file}
+    sed -i 's/^M//g' formatted_${input_file}
    
 
     cat <<-END_VERSIONS > versions.yml
