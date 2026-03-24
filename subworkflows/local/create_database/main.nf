@@ -17,10 +17,10 @@ workflow CREATE_DATABASE {
      )
 
     ch_versions = ch_versions.mix(FORMAT_DATABASE.out.versions.first())
-    ch_reference_formatted = FORMAT_DATABASE.out.fasta
+    ch_reference_formatted = FORMAT_DATABASE.out.fasta_file
 
     BLAST_MAKEBLASTDB (
-        ch_reference_formatted
+        FORMAT_DATABASE.out.fasta
      )
 
      ch_versions = ch_versions.mix(BLAST_MAKEBLASTDB.out.versions)
@@ -28,6 +28,7 @@ workflow CREATE_DATABASE {
 
     emit:
     // TODO nf-core: edit emitted channels
-    blast_refdb     = ch_blast_refdb        // channel: [ val(meta), [ fasta ] ]
-    versions           = ch_versions           // channel: [ versions.yml ]
+    blast_refdb        = ch_blast_refdb             // channel: [ val(meta), [ fasta ] ]
+    versions           = ch_versions                // channel: [ versions.yml ]
+    formatted_refdb    = ch_reference_formatted     // channel: [ fasta ]
 }

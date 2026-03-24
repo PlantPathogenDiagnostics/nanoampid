@@ -50,10 +50,23 @@ workflow NANOAMPID {
 
     ch_reference     = createFileChannel(params.reference)
 
+    // Create BLAST database from reference sequences
+    ch_reference_with_meta = ch_reference.map {
+        item -> [['id': "fasta-for-makeblastdb"], item]
+        }
+
+    CREATE_DATABASE (
+        ch_reference_with_meta
+     )
+
+     ch_versions = ch_versions.mix(CREATE_DATABASE.out.versions)
+     ch_blast_refdb = CREATE_DATABASE.out.blast_refdb.collect{it[1]}.ifEmpty([]).map{it -> [[id: 'reference'], it]}
+     ch_ref_fasta_formatted = CREATE_DATABASE.out.formatted_refdb
+
     // Preprocessing reads
     LONGREAD_PREPROCESSING(
         ch_samplesheet,
-        ch_reference
+        ch_ref_fasta_formatted
     )
     ch_versions = ch_versions.mix(LONGREAD_PREPROCESSING.out.versions)
     ch_multiqc_files = ch_multiqc_files.mix(LONGREAD_PREPROCESSING.out.multiqc_files.collect { it[1] }.ifEmpty([]))
@@ -63,22 +76,15 @@ workflow NANOAMPID {
     // Cluster and consensus generations
     REFERENCE_BASED_CLUSTERING(
         ch_long_reads,
-        ch_reference
+        ch_ref_fasta_formatted
     )
 
     ch_consensus = REFERENCE_BASED_CLUSTERING.out.consensus
     ch_versions = ch_versions.mix(REFERENCE_BASED_CLUSTERING.out.versions)
 
-    // Create BLAST database from reference sequences
-    ch_reference_with_meta = ch_reference.map {
-        item -> [['id': "fasta-for-makeblastdb"], item]
-        }
 
-    CREATE_DATABASE (
-        ch_reference_with_meta
-     )
-     ch_versions = ch_versions.mix(CREATE_DATABASE.out.versions)
-     ch_blast_refdb = CREATE_DATABASE.out.blast_refdb.collect{it[1]}.ifEmpty([]).map{it -> [[id: 'reference'], it]}
+
+
 
     // Classify consensus sequences
     CLASSIFY_CONSENSUS (

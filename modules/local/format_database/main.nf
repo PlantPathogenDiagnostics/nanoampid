@@ -10,8 +10,9 @@ process FORMAT_DATABASE {
     tuple val(meta), path(input_file)
 
     output:
-    tuple val(meta), path("formatted_${input_file}")     ,   emit: fasta
+    tuple val(meta), path("formatted_${input_file}")        ,   emit: fasta
     path "versions.yml"                                     ,   emit: versions
+    path"formatted_${input_file}"                           ,   emit: fasta_file
 
     when:
     task.ext.when == null || task.ext.when
@@ -23,7 +24,7 @@ process FORMAT_DATABASE {
     # Rename headers by filename
     
     sed  '/^>/s/\\W/_/2g' ${input_file} > formatted_${input_file}
-    sed -i 's/^M//g' formatted_${input_file}
+    sed -i 's/\\r\$//' formatted_${input_file}
    
 
     cat <<-END_VERSIONS > versions.yml
