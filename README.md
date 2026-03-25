@@ -9,7 +9,7 @@
 
 ## Introduction
 
-**NanoPore Amplification Identification (nanoampid)** is a bioinformatics pipeline that generates consensus sequences with classification from NanoPore amplicon sequencing data. It takes a samplesheet with FASTQ files from NanoPore sequencing as input performs quality control (QC), read clustering, consensus sequence generation, blast alignment, and produces a reference assignment and QC report.
+**NanoPore Amplification Identification (nanoampid)** is a bioinformatics pipeline that generates consensus sequences with classification from NanoPore amplicon sequencing data. It takes a samplesheet with FASTQ files from NanoPore sequencing as input and performs quality control (QC), read clustering, consensus sequence generation, blast alignment, and produces a reference assignment and QC report.
 
 ![nanoampid-workflow](docs/images/nanoampid_metromap_v1.png)
 
@@ -52,7 +52,7 @@ nextflow run main.nf -profile test,<docker/singularity/.../institute>
 ```
 
 
-First, prepare a samplesheet with your input data that looks as follows:
+First, prepare a samplesheet with your input data. Each row represents a fastq file with the sample name and full path to the fastq location. A header line is also required. The file should be modeled as follows:
 
 `samplesheet.csv`:
 
@@ -61,14 +61,12 @@ sample,fastq_1
 CONTROL_REP1,/path/to/sample1.fastq.gz
 ```
 
-Each row represents a fastq file.
-
-You must also supply a reference fasta database of gene sequences.
+You must also supply a reference fasta of gene sequences. This file will serve as the database for reference-based assembly and taxonomic assignment of consensus sequences. 
 
 Now, you can run the pipeline using:
 
 ```bash
-nextflow run nanoampid \
+nextflow run </path/to/>nanoampid \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
    --outdir <OUTDIR> \
@@ -78,9 +76,6 @@ nextflow run nanoampid \
 For more details about pipeline useage see [useage documentation](/docs/usage.md), for details on the output files and reports, please refer to the
 [output documentation](/docs/output.md).
 
-> [!WARNING]
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
-
 ## Full Usage
 
 ```
@@ -88,7 +83,6 @@ Typical pipeline command:
 
   nextflow run nanoampid -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR> --reference <fasta of ref sequences>
 
---skip_qc                       [boolean]
 --show_hidden                   [boolean]         Show all hidden parameters in the help message. This needs to be used in combination with `--help` or `--help_full`.
 --help                          [boolean, string] Show the help message for all top level parameters. When a parameter is given to `--help`, the full help message of that parameter will be printed.
 --help_full                     [boolean]         Show the help message for all non-hidden parameters.
@@ -124,7 +118,7 @@ Generic options
 
 PlantPathogenDiagnostics/nanoampid was originally written by Schyler O. Nunziata.
 
-We thank the following people for their extensive assistance in the development of this pipeline: Subodh K. Srivastava, Vanina Castroagudin, Eric Newberry, Yazmin Rivera, and Gloria Abad
+We thank the following people for their extensive assistance in the development of this pipeline: Subodh K. Srivastava, Vanina Castroagudin, Eric Newberry, Yazmin Rivera, and Gloria Abad.
 
 
 ## Contributions and Support
