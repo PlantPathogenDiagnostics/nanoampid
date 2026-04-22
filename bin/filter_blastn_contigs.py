@@ -111,7 +111,7 @@ summary_filtered = groups.apply(lambda g: g[g['Consensus Length'] == g['Consensu
 
 #Organize columns for output
 # Define the new order of columns
-new_order = ['Barcode', 'Cluster', 'Read Count','Ref Sequence','pident', 'Ref Length', 'Consensus Length', 'mismatch', 'gapopen', 'evalue', 'bitscore', '%_Ref_Cov', 'Sequence']
+new_order = ['Barcode', 'Cluster', 'Read Count','Ref Sequence','pident', 'length', 'Ref Length', 'Consensus Length', 'mismatch', 'gapopen', 'evalue', 'bitscore', '%_Ref_Cov', 'Sequence']
 
 # Reassign the DataFrame with the new column order
 summary_filtered = summary_filtered[new_order]
