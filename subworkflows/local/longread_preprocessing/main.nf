@@ -9,7 +9,7 @@ include { NANOQ as NANOQ_RAW               } from '../../../modules/nf-core/nano
 include { NANOQ as NANOQ_FILTERED          } from '../../../modules/nf-core/nanoq'
 include { CHOPPER                          } from '../../../modules/nf-core/chopper'
 include { BBMAP_REFORMAT                   } from '../../../modules/local/bbmap/reformat'
-include { VSEARCH_ORIENT                   } from '../../../modules/local/vsearch/orient'
+// include { VSEARCH_ORIENT                   } from '../../../modules/local/vsearch/orient'
 
 
 workflow LONGREAD_PREPROCESSING {
@@ -69,16 +69,16 @@ workflow LONGREAD_PREPROCESSING {
     )
     ch_versions = ch_versions.mix(CHOPPER.out.versions)
     ch_long_reads = CHOPPER.out.fastq
-
+ /*
     //Orient Reads with database
     VSEARCH_ORIENT(
         ch_long_reads,
         ch_reference
     )
-
+*/
     //Truncate read names to comply with down-stream processing
     BBMAP_REFORMAT (
-        VSEARCH_ORIENT.out.reads,
+        ch_long_reads
     )
     ch_versions = ch_versions.mix(BBMAP_REFORMAT.out.versions)
     ch_long_reads = BBMAP_REFORMAT.out.reads
