@@ -34,14 +34,14 @@ workflow LONGREAD_PREPROCESSING {
             def count = files[0].countFastq()
             return tuple(meta, count)
         }
-
+ /*
     // Remove duplicate reads
     SEQKIT_RMDUP(
         ch_samplesheet,
     )
     ch_versions = ch_versions.mix(SEQKIT_RMDUP.out.versions)
     ch_long_reads = SEQKIT_RMDUP.out.fastx
-
+*/
     // Adapter trimming with porechop or porechop_abi
     if (params.adaptertrimming_tool == 'porechop_abi') {
         PORECHOP_ABI(
@@ -54,7 +54,7 @@ workflow LONGREAD_PREPROCESSING {
     }
     else if (params.adaptertrimming_tool == 'porechop') {
         PORECHOP_PORECHOP(
-            ch_long_reads,
+            ch_samplesheet,
         )
         ch_versions = ch_versions.mix(PORECHOP_PORECHOP.out.versions)
         ch_long_reads = PORECHOP_PORECHOP.out.reads
