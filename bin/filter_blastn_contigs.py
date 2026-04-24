@@ -91,6 +91,9 @@ combined_df = pd.concat(summary_consensus, ignore_index=True)
 #Calculate portion of reference covered by consensus sequence
 combined_df['%_Ref_Cov'] = 100* (combined_df['length']/combined_df['Ref Length'])
 
+#Calculate contig length difference from reference
+combined_df['len_dif'] = abs(combined_df['qlen'] - combined_df['slen'])
+
 #Filter by parameters
 combined_df= combined_df[combined_df['%_Ref_Cov'] > args.min_ref_cov]
 combined_df = combined_df[combined_df['pident'] > args.min_pident]
@@ -107,7 +110,8 @@ summary_filtered = groups.apply(lambda g: g[g['pident'] == g['pident'].max()])
 #If multiple contigs hit the same reference within a sample, retain the contig with the longest contig with the highest pident
 groups = summary_filtered.groupby(by=['Barcode','Ref Sequence'], as_index=False, sort=False)
 summary_filtered = groups.apply(lambda g: g[g['pident'] == g['pident'].max()])
-summary_filtered = groups.apply(lambda g: g[g['Consensus Length'] == g['Consensus Length'].max()])
+#summary_filtered = groups.apply(lambda g: g[g['Consensus Length'] == g['Consensus Length'].max()])
+summary_filtered = groups.apply(lambda g: g[g['len_dif'] == g['len_dif'].min()])
 
 #Organize columns for output
 # Define the new order of columns
