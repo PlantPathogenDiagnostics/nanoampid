@@ -30,7 +30,7 @@ workflow REFERENCE_BASED_CLUSTERING {
     )
     ch_versions = ch_versions.mix(BBMAP_SEAL.out.versions.first())
     ch_seal_reads = BBMAP_SEAL.out.reads.map{meta, reads -> tuple(meta, reads.findAll{ it -> it.countFastq() > 5 })} // Filter for references with at least 5 mapped reads
-
+/*
     // Cluster by reference-free clustering with ISONCLUST
     ISONCLUST (
         ch_long_reads
@@ -44,9 +44,9 @@ workflow REFERENCE_BASED_CLUSTERING {
             def all_reads = mapped_reads + isonclust_reads
             tuple( meta, all_reads )
         }
-
+*/
     // Flatten mapped reads channel for processing in FILTLONG
-    ch_mapped_reads_flattened = ch_mapped_reads.flatMap { meta, file_list  ->
+    ch_mapped_reads_flattened = ch_seal_reads.flatMap { meta, file_list  ->
         file_list.collect { file ->
             [ meta, file ]
                 def key = file.getSimpleName().replace("${meta.id}_", '')
@@ -67,7 +67,7 @@ workflow REFERENCE_BASED_CLUSTERING {
         [meta_updated, mapped]
     }
     ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
-/*
+
     // Get reference read for each cluster
     REFPERCLUSTER (
         ch_mapped_reads_flattened
@@ -80,8 +80,8 @@ workflow REFERENCE_BASED_CLUSTERING {
     def read_count = read_count_file.text.trim().toInteger()
     [meta + [ read_count: read_count ], mapped_reads, consensus ]
     }
-*/
 
+/*
     // Generate consensus sequences with SPOA
     SPOA (
         ch_mapped_reads_flattened
@@ -96,7 +96,7 @@ workflow REFERENCE_BASED_CLUSTERING {
         }
 
     ch_versions = ch_versions.mix(SPOA.out.versions.first())
-
+*/
     // Align reads to consensus sequences with MINIMAP2
     MINIMAP2_ALIGN (
         ch_mapped_reads_flattened.map { meta, mapped_reads, _consensus -> tuple( meta, mapped_reads ) },
