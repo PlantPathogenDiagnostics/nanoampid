@@ -22,10 +22,10 @@ process BLASTNFILTER {
 
 
     """
-    filter_blastn_contigs.py \\
+    filter_blastn.py \\
         ${blast} \\
-        ${meta2} \\
-        --outfile ${params.output}.xlsx \\
+        --read-counts ${meta2} \\
+        -o ${params.output}.xlsx \\
         ${args}
 
 
