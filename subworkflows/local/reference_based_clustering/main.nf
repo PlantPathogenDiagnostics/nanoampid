@@ -3,7 +3,7 @@ REFERENCE_BASED_CLUSTERING: Cluster reads against a reference database
 */
 include { BBMAP_SEAL      }     from '../../../modules/local/bbmap/seal/main'
 include { FILTLONG        }     from '../../../modules/nf-core/filtlong/main'
-// include { SPOA            }     from '../../../modules/local/spoa/main'
+include { SPOA            }     from '../../../modules/local/spoa/main'
 include { REFPERCLUSTER            }     from '../../../modules/local/refpercluster/main'
 include { ISONCLUST       }     from '../../../modules/local/isonclust/main'
 include { VSEARCH_CLUSTER }     from '../../../modules/nf-core/vsearch/cluster/main'
@@ -67,7 +67,7 @@ workflow REFERENCE_BASED_CLUSTERING {
         [meta_updated, mapped]
     }
     ch_versions = ch_versions.mix(FILTLONG.out.versions.first())
-
+/*
     // Get reference read for each cluster
     REFPERCLUSTER (
         ch_mapped_reads_flattened
@@ -80,8 +80,8 @@ workflow REFERENCE_BASED_CLUSTERING {
     def read_count = read_count_file.text.trim().toInteger()
     [meta + [ read_count: read_count ], mapped_reads, consensus ]
     }
+*/
 
-/*
     // Generate consensus sequences with SPOA
     SPOA (
         ch_mapped_reads_flattened
@@ -96,7 +96,7 @@ workflow REFERENCE_BASED_CLUSTERING {
         }
 
     ch_versions = ch_versions.mix(SPOA.out.versions.first())
-*/
+
     // Align reads to consensus sequences with MINIMAP2
     MINIMAP2_ALIGN (
         ch_mapped_reads_flattened.map { meta, mapped_reads, _consensus -> tuple( meta, mapped_reads ) },
