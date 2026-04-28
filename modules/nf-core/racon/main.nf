@@ -4,8 +4,8 @@ process RACON {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/racon:1.4.20--h9a82719_1' :
-        'biocontainers/racon:1.4.20--h9a82719_1' }"
+        'community.wave.seqera.io/library/racon:1.5.0--eb0a17215e005d19' :
+        'oras://community.wave.seqera.io/library/racon:1.5.0--0f7d7e0fa284c5c6' }"
 
     input:
     tuple val(meta), path(reads), path(assembly), path(paf)

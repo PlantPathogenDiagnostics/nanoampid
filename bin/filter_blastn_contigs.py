@@ -59,6 +59,7 @@ parser.add_argument(
     metavar="mismatch",
     type=float,
     help="maximum number of nucleotide mismatches with the reference",
+    default=11
 )
 
 parser.add_argument(
@@ -110,7 +111,7 @@ summary_filtered = groups.apply(lambda g: g[g['pident'] == g['pident'].max()])
 #If multiple contigs hit the same reference within a sample, retain the contig with the longest contig with the highest pident
 groups = summary_filtered.groupby(by=['Barcode','Ref Sequence'], as_index=False, sort=False)
 summary_filtered = groups.apply(lambda g: g[g['pident'] == g['pident'].max()])
-summary_filtered = groups.apply(lambda g: g[g['Consensus Length'] == g['Consensus Length'].max()])
+#summary_filtered = groups.apply(lambda g: g[g['Consensus Length'] == g['Consensus Length'].max()])
 #summary_filtered = groups.apply(lambda g: g[g['len_dif'] == g['len_dif'].min()])
 
 #Organize columns for output
